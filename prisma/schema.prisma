@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id   String @id @default(uuid())
+  // gender
+  user Json
+
+  matches  Json
+  appOpens Json
+
+  swipeLikes  Json
+  swipePasses Json
+
+  messagesSent     Json
+  messagesReceived Json
+  dataFile         OriginalFile @relation(fields: [originalFileId], references: [id])
+
+  originalFileId String
+}
+
+model OriginalFile {
+  id       String    @id @default(uuid())
+  fileName String
+  file     Json
+  Profile  Profile[]
+}
+
+// Conversations

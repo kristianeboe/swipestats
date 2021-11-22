@@ -1,0 +1,98 @@
+import { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+
+export function UploadArea({
+  //   files,
+  //   setFiles,
+  onAcceptedFileLoad,
+}: {
+  //   files: File[];
+  //   setFiles: (files: File[]) => any;
+  onAcceptedFileLoad: (d: string) => void;
+}) {
+  const [files, setFiles] = useState<File[]>([]);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      // Do something with the files
+      setFiles([...files, ...acceptedFiles]);
+
+      acceptedFiles.forEach((file: File) => {
+        const reader = new FileReader();
+
+        reader.onabort = () => console.log('file reading was aborted');
+        reader.onerror = () => console.log('file reading has failed');
+        reader.onload = () => {
+          // Do whatever you want with the file contents
+          // const binaryStr = reader.result;
+          // console.log(binaryStr);
+          onAcceptedFileLoad(reader.result as string);
+        };
+        // reader.readAsArrayBuffer(file);
+        reader.readAsText(file);
+      });
+    },
+    [files, onAcceptedFileLoad]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    maxFiles: 1,
+    accept: '.json',
+    validator: () => null, // can maybe validate already here? Probably need to do it later
+  });
+
+  return (
+    <div
+      className={`w-full max-w-6xl mx-auto transition-all rounded-md  ${
+        isDragActive ? 'bg-rose-50  p-2' : ''
+      }`}
+      {...getRootProps()}
+    >
+      <label htmlFor="cover-photo" className="block text-sm font-medium text-gray-700 sr-only">
+        File select dropsone
+      </label>
+      <div
+        className={`drop-area flex justify-center px-6 pt-5 pb-6 border-2 transition-color ${
+          isDragActive ? 'border-rose-500' : 'border-gray-300'
+        }   border-dashed rounded-md`}
+      >
+        <div className="space-y-1 text-center">
+          <svg
+            className="mx-auto h-12 w-12 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            stroke="currentColor"
+            fill="none"
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 14v20c0 4.418 7.163 8 16 8 1.381 0 2.721-.087 4-.252M8 14c0 4.418 7.163 8 16 8s16-3.582 16-8M8 14c0-4.418 7.163-8 16-8s16 3.582 16 8m0 0v14m0-4c0 4.418-7.163 8-16 8S8 28.418 8 24m32 10v6m0 0v6m0-6h6m-6 0h-6"
+            />
+          </svg>
+
+          <div className="flex text-sm text-gray-600">
+            <p className="pr-1">Select your</p>
+            <label
+              htmlFor="file-select"
+              className="relative cursor-pointer bg-white rounded-md font-medium text-rose-600 hover:text-rose-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-rose-500"
+            >
+              <span>data.json</span>
+              <input
+                id="file-select"
+                name="file-select"
+                type="file"
+                className="sr-only"
+                {...getInputProps()}
+              />
+            </label>
+            <p className="pl-1">file</p>
+          </div>
+          <p className="text-xs text-gray-500">or drag and drop</p>
+        </div>
+      </div>
+    </div>
+  );
+}
