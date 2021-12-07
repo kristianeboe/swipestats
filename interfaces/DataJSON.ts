@@ -2,20 +2,83 @@ export interface TinderDataJSON {
   User: User;
   Usage: Usage;
   Campaigns: Campaigns;
+  Experiences: Experiences;
   Purchases: Purchases;
-  Photos: string[];
+  Photos: string[]; // just the name of the phots, not URIs
   Spotify: Spotify;
-  Messages: Message[];
+  Messages: Messages[];
+  RoomsAndInteractions: RoomsAndInteractions;
+  SwipeNotes: any[];
   StudentVerifications: StudentVerifications;
 }
 
 export interface Usage {
-  app_opens: AppOpens;
-  swipes_likes: SwipesLikes;
-  swipes_passes: SwipesPasses;
+  app_opens: DateValueMap;
+  swipes_likes: DateValueMap;
+  swipes_passes: DateValueMap;
+  superlikes: DateValueMap;
   matches: Matches;
   messages_sent: MessagesSent;
   messages_received: MessagesReceived;
+  advertising_id: {
+    [date: string]: string; // empty string
+  };
+  idfa: {
+    [date: string]: string; // empty string
+  };
+}
+
+interface User {
+  active_time: Date;
+  age_filter_max: number;
+  age_filter_min: number;
+  birth_date: Date;
+  create_date: Date;
+  email: string;
+  full_name: string;
+  gender: string;
+  gender_filter: string;
+  interested_in: string;
+  bio: string;
+  city: City;
+  connection_count: number;
+  education: string; // I think this is depreciated
+  instagram: Instagram;
+  spotify: Instagram; // no
+  interestsc: Interest[];
+  ip_address: string;
+  is_traveling: boolean;
+  jobs: Job[];
+  name: string;
+  pos: Pos;
+  schools: School[];
+  travel_location_info: TravelLocationInfo[];
+  client_registration_info?: {
+    platform: 'ios' | 'android' | string;
+  };
+  travel_pos: TravelPos;
+  username: string;
+  phone_id: string;
+  college: any[];
+  user_interests?: string[]; //  "Fashion","Grab a drink","Cooking","Brunch","Wine"
+  sexual_orientations?: string[]; // ['str']
+}
+
+export interface Experiences {
+  [key: string]: any;
+}
+
+export interface RoomsAndInteractions {
+  rooms: [
+    {
+      role: null;
+      is_active: boolean; // almost always true
+      is_open: boolean; // almost always true
+      room_type: 'sync_swipe' | string;
+      created_at: string; // not iso date, but close
+      interactions: any[];
+    }
+  ];
 }
 
 interface StudentVerifications {
@@ -139,37 +202,6 @@ interface TravelPos {
   lon: number;
 }
 
-interface User {
-  active_time: Date;
-  age_filter_max: number;
-  age_filter_min: number;
-  bio: string;
-  birth_date: Date;
-  city: City;
-  connection_count: number;
-  create_date: Date;
-  education: string;
-  email: string;
-  full_name: string;
-  gender: string;
-  gender_filter: string;
-  instagram: Instagram;
-  spotify: Instagram; // no
-  interested_in: string;
-  interestsc: Interest[];
-  ip_address: string;
-  is_traveling: boolean;
-  jobs: Job[];
-  name: string;
-  pos: Pos;
-  schools: School[];
-  travel_location_info: TravelLocationInfo[];
-  travel_pos: TravelPos;
-  username: string;
-  phone_id: string;
-  college: any[];
-}
-
 interface Pos2 {
   lat: number;
   lon: number;
@@ -197,6 +229,11 @@ export interface Spotify {
 }
 
 type DateKeyString = `${number}-${number}-${number}`;
+
+export interface DateValueMap {
+  [dateKey: DateKeyString]: number;
+}
+
 export interface AppOpens {
   [dateKey: DateKeyString]: number;
 }
@@ -221,16 +258,16 @@ export interface MessagesReceived {
   [dateKey: DateKeyString]: number;
 }
 
-export interface Message2 {
-  to: number;
-  from: string;
-  message: string;
-  sent_date: string;
-  type: string;
-  fixed_height: string;
+export interface Message {
+  to: number; // match id - 1
+  from: string; // "You"
+  message: string; // should maybe clean this from HTML to string. Lot's of "don&rsquo;t"
+  sent_date: string; // not iso string, but close "Tue, 30 Nov 2021 05:08:21 GMT"
+  type?: string; // "gif"
+  fixed_height?: string; // url (to gif)
 }
 
-export interface Message {
+export interface Messages {
   match_id: string;
-  messages: Message2[];
+  messages: Message[];
 }

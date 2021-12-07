@@ -1,4 +1,5 @@
 import prisma from '../../../lib/prisma';
+// https://vercel.com/guides/nextjs-prisma-postgres
 
 export default async function handler(req, res) {
   const { id, user } = req.body;
