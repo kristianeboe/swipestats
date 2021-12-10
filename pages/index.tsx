@@ -293,7 +293,7 @@ export default function Home() {
                     />
                   </div> */}
                   <Link href="/upload/" passHref={true}>
-                    <div className="mt-4 sm:mt-0">
+                    <a className="mt-4 sm:mt-0">
                       {/* <button
                         type="submit"
                         className="block w-full rounded-md border border-transparent px-5 py-3 bg-rose-500 text-base font-medium text-white shadow hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10"
@@ -301,21 +301,21 @@ export default function Home() {
                         Upload
                       </button> */}
                       <Button type="submit" content="Upload" />
-                    </div>
+                    </a>
                   </Link>
-                  <Link href="/insights/" passHref={true}>
-                    <div className="mt-4 sm:mt-0 sm:ml-3">
+                  {/* <Link href="/insights/" passHref={true}>
+                    <a className="mt-4 sm:mt-0 sm:ml-3">
                       <button className="block w-full rounded-md border border-transparent px-5 py-3 bg-white text-base font-medium text-gray-900 shadow hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 sm:px-10">
                         Live demo
                       </button>
-                    </div>
-                  </Link>
+                    </a>
+                  </Link> */}
                   <Link href="/insights/" passHref={true}>
-                    <div className="ml-3 inline-flex rounded-md shadow">
+                    <a className="ml-3 inline-flex rounded-md shadow">
                       <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">
                         Live demo
                       </button>
-                    </div>
+                    </a>
                   </Link>
                 </form>
                 {/* <div className="flex">
