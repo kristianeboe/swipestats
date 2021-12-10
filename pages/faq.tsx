@@ -1,6 +1,6 @@
 import FAQSection from '../components/tw/FAQSection';
 
-export function FAQPage() {
+export default function FAQPage() {
   return (
     <div>
       <FAQSection />

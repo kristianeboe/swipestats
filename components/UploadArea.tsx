@@ -103,13 +103,14 @@ export function UploadArea({
         The file is NOT uploaded to a server, just used to extract your relevant, anonymous profile
         information.
       </p>
-      {fileRejections.length > 0 && <ErrorAlert />}
+      {fileRejections.length > 0 && <Alert title="Unsupported file" category="danger" />}
     </div>
   );
 }
 
 /* This example requires Tailwind CSS v2.0+ */
 import { XCircleIcon } from '@heroicons/react/solid';
+import { Alert } from './tw/Alert';
 
 export default function ErrorAlert() {
   return (

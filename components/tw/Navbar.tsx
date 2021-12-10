@@ -50,15 +50,15 @@ export default function Navbar({ simple }: { simple: boolean }) {
           <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
             <div className="relative h-16 flex justify-between">
               <div className="relative z-10 px-2 flex lg:px-0">
-                <Link href="/">
-                  <div className="flex-shrink-0 flex items-center">
+                <Link href="/" passHref>
+                  <a className="flex-shrink-0 flex items-center">
                     {/* <img
                     className="block h-8 w-auto"
                     src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
                     alt="Workflow"
                 /> */}
                     <SwipestatsLogo extraClassNames="h-8" />
-                  </div>
+                  </a>
                 </Link>
               </div>
               <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:absolute sm:inset-0">

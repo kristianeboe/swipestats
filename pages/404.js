@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import Image from 'next/image';
+
 export default function Custom404() {
   return (
     <>
@@ -12,10 +15,19 @@ export default function Custom404() {
       <div className="min-h-full pt-16 pb-12 flex flex-col bg-white">
         <main className="flex-grow flex flex-col justify-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex-shrink-0 flex justify-center">
-            <a href="/" className="inline-flex">
-              <span className="sr-only">Swipestats</span>
-              <img className="h-24 w-auto" src="/swipestatsLogo.svg" alt="" />
-            </a>
+            <Link href="/" passHref>
+              <a className="inline-flex">
+                <span className="sr-only">Swipestats</span>
+                <Image
+                  className="h-24 w-auto"
+                  height={96}
+                  width={96}
+                  src="/swipestatsLogo.svg"
+                  alt=""
+                />
+                {/* <img className="h-24 w-auto" src="/swipestatsLogo.svg" alt="" /> */}
+              </a>
+            </Link>
           </div>
           <div className="py-16">
             <div className="text-center">

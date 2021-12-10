@@ -59,7 +59,9 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
           </div>
 
           <br />
-          <p className="text-gray-700 text-base">This will be your unique id, don't lose it:</p>
+          <p className="text-gray-700 text-base">
+            This will be your unique id, don&apos;t lose it:
+          </p>
           <div className="mt-5">
             <div className="rounded-md bg-gray-50 px-6 py-5 sm:flex sm:items-center sm:justify-between">
               <div className="sm:flex sm:items-start">{userId}</div>
@@ -92,7 +94,7 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
                     className="float-right bg-gray-500 rounded p-2"
                     // @click="removeKeyFromUserData('jobs')"
                   >
-                    Don't share
+                    Don&apos;t share
                   </button>
                   <div>Title: {job.title.name}</div>
                   {/* <div>Show title: { job.titleDisplayed }</div>
@@ -111,7 +113,7 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
                     className="float-right bg-gray-500 rounded p-2"
                     // @click="removeKeyFromUserData('schools')"
                   >
-                    Don't share
+                    Don&apos;t share
                   </button>
                   <div>School: {school.name}</div>
                   {/* <div>Show school: { school.displayed }</div> */}
@@ -135,12 +137,12 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
         </div>
       </div>
       <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-        <Link href="/insights">
-          <div className="rounded-md shadow">
+        <Link href="/insights" passHref>
+          <a className="rounded-md shadow">
             <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 md:py-4 md:text-lg md:px-10">
               Upload
             </button>
-          </div>
+          </a>
         </Link>
       </div>
       {debug && (

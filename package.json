@@ -5,10 +5,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:reset": "npx prisma migrate reset",
+    "db:deploy": "npx prisma db push",
+    "db:update": "npx prisma generate && npx prisma db push",
+    "db:studio": "npx prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^3.5.0",
+    "ky": "^0.28.7",
+    "ky-universal": "^0.9.1",
     "next": "12.0.4",
     "parse-json": "^6.0.2",
     "react": "17.0.2",
