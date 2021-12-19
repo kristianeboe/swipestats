@@ -6,7 +6,7 @@ import styles from '../styles/Home.module.css';
 
 import { ChevronRightIcon, StarIcon } from '@heroicons/react/solid';
 import { HeaderBanner } from '../components/tw/HeaderBanner';
-import { CTASection } from '../components/tw/CTASection';
+import { EmailReminderSection } from '../components/tw/EmailReminderSection';
 import {
   TrustPilotReviewCollector,
   TrustPilotMicroReviewCount,
@@ -292,7 +292,7 @@ export default function Home() {
                       placeholder="Enter your email"
                     />
                   </div> */}
-                  <Link href="/upload/" passHref={true}>
+                  <Link href="/upload/tinder/" passHref={true}>
                     <a className="mt-4 sm:mt-0">
                       {/* <button
                         type="submit"
@@ -531,7 +531,7 @@ export default function Home() {
 
         <DataRequestSupport />
 
-        <CTASection />
+        <EmailReminderSection />
       </main>
 
       {/* Footer section */}

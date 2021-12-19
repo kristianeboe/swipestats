@@ -137,7 +137,7 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
         </div>
       </div>
       <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-        <Link href="/insights" passHref>
+        <Link href="/insights/" passHref>
           <a className="rounded-md shadow">
             <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 md:py-4 md:text-lg md:px-10">
               Upload

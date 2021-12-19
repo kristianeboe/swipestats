@@ -1,19 +1,25 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Footer } from '../components/tw/Footer';
-import Navbar from '../components/tw/Navbar';
-import { UploadArea } from '../components/UploadArea';
-import { UploadProfileCard } from '../components/UploadProfileCard';
-import { TinderDataJSON } from '../interfaces/DataJSON';
+import { Footer } from '../../components/tw/Footer';
+import Navbar from '../../components/tw/Navbar';
+import { UploadArea } from '../../components/UploadArea';
+import { UploadProfileCard } from '../../components/UploadProfileCard';
+import { TinderDataJSON } from '../../interfaces/DataJSON';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 import ky from 'ky-universal';
-import { Button } from '../components/tw/Button';
-import { classNames } from '../lib/utils';
-import StepHeader from '../components/tw/StepHeader';
+import { Button } from '../../components/tw/Button';
+import { classNames } from '../../lib/utils';
+import StepHeader from '../../components/tw/StepHeader';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+// import { useClientRouter } from "use-client-router";
+import Head from 'next/head';
+import { GetServerSideProps } from 'next';
 
+type ProviderId = 'tinder' | 'hinge' | 'bumble';
 interface DataProvider {
-  id: number;
+  id: ProviderId;
   title: 'Tinder' | 'Hinge' | 'Bumble';
   description: string;
   users: string;
@@ -21,26 +27,41 @@ interface DataProvider {
 
 const dataProviders: DataProvider[] = [
   {
-    id: 1,
+    id: 'tinder',
     title: 'Tinder',
     description: "The world's most popular dating app.", //, making it the place to meet new people.",
     users: '621 users',
   },
   {
-    id: 2,
+    id: 'hinge',
     title: 'Hinge',
     description: 'The dating app designed to be deleted.', // Hinge is built on the belief that anyone looking for love should be able to find it.',
     users: '1200 users',
   },
   {
-    id: 3,
+    id: 'bumble',
     title: 'Bumble',
     description: 'Women make the first move.', // 'Bumble has changed the way people date, find friends, and the perception of meeting online, for the better. Women make the first move.',
     users: '2740 users',
   },
 ];
 
-export default function UploadPage() {
+// async function getServerSideProps(context): GetServerSideProps {
+//     const { id } = context.query;
+
+// }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { provider } = context.query;
+
+  return {
+    props: {
+      providerId: provider,
+    },
+  };
+};
+
+export default function UploadPage({ providerId }: { providerId: ProviderId }) {
+  //   const { provider: providerId } = router.query;
   const [jsonProfile, setJsonProfile] = useState<TinderDataJSON | null>(null);
 
   function onAcceptedFileLoad(data: string) {
@@ -48,10 +69,16 @@ export default function UploadPage() {
     setJsonProfile(JSON.parse(data));
   }
 
-  const [selectedDataProvider, setDataProvider] = useState(dataProviders[0]);
+  const [selectedDataProvider, setDataProvider] = useState(
+    dataProviders.find((p) => p.id === providerId) ?? dataProviders[0]
+  );
 
   return (
     <div>
+      <Head>
+        <title>Upload your </title>
+        <meta />
+      </Head>
       <div className="h-screen">
         {/* <Navbar simple={true} /> */}
         <StepHeader />
@@ -76,59 +103,62 @@ export default function UploadPage() {
 
                 <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
                   {dataProviders.map((dataProvider) => (
-                    <RadioGroup.Option
-                      key={dataProvider.id}
-                      value={dataProvider}
-                      className={({ checked, active }) =>
-                        classNames(
-                          checked ? 'border-transparent' : 'border-gray-300',
-                          active ? 'ring-2 ring-rose-500' : '',
-                          'relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none'
-                        )
-                      }
-                    >
-                      {({ checked, active }) => (
-                        <>
-                          <div className="flex-1 flex">
-                            <div className="flex flex-col">
-                              <RadioGroup.Label
-                                as="span"
-                                className="block text-sm font-medium text-gray-900"
-                              >
-                                {dataProvider.title}
-                              </RadioGroup.Label>
-                              <RadioGroup.Description
-                                as="span"
-                                className="mt-1 flex items-center text-sm text-gray-500"
-                              >
-                                {dataProvider.description}
-                              </RadioGroup.Description>
-                              {/* <RadioGroup.Description
+                    <Link key={dataProvider.id} href={`/upload/${dataProvider.id}/`} passHref>
+                      <a>
+                        <RadioGroup.Option
+                          value={dataProvider}
+                          className={({ checked, active }) =>
+                            classNames(
+                              checked ? 'border-transparent' : 'border-gray-300',
+                              active ? 'ring-2 ring-rose-500' : '',
+                              'relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none'
+                            )
+                          }
+                        >
+                          {({ checked, active }) => (
+                            <>
+                              <div className="flex-1 flex">
+                                <div className="flex flex-col">
+                                  <RadioGroup.Label
+                                    as="span"
+                                    className="block text-sm font-medium text-gray-900"
+                                  >
+                                    {dataProvider.title}
+                                  </RadioGroup.Label>
+                                  <RadioGroup.Description
+                                    as="span"
+                                    className="mt-1 flex items-center text-sm text-gray-500"
+                                  >
+                                    {dataProvider.description}
+                                  </RadioGroup.Description>
+                                  {/* <RadioGroup.Description
                                 as="span"
                                 className="mt-6 text-sm font-medium text-gray-900"
                               >
                                 {dataProvider.users}
                               </RadioGroup.Description> */}
-                            </div>
-                          </div>
-                          <CheckCircleIcon
-                            className={classNames(
-                              !checked ? 'invisible' : '',
-                              'h-5 w-5 text-rose-600'
-                            )}
-                            aria-hidden="true"
-                          />
-                          <div
-                            className={classNames(
-                              active ? 'border' : 'border-2',
-                              checked ? 'border-rose-500' : 'border-transparent',
-                              'absolute -inset-px rounded-lg pointer-events-none'
-                            )}
-                            aria-hidden="true"
-                          />
-                        </>
-                      )}
-                    </RadioGroup.Option>
+                                </div>
+                              </div>
+                              <CheckCircleIcon
+                                className={classNames(
+                                  !checked ? 'invisible' : '',
+                                  'h-5 w-5 text-rose-600'
+                                )}
+                                aria-hidden="true"
+                              />
+                              <div
+                                className={classNames(
+                                  active ? 'border' : 'border-2',
+                                  checked ? 'border-rose-500' : 'border-transparent',
+                                  'absolute -inset-px rounded-lg pointer-events-none'
+                                )}
+                                aria-hidden="true"
+                              />
+                            </>
+                          )}
+                        </RadioGroup.Option>
+                      </a>
+                    </Link>
                   ))}
                 </div>
               </RadioGroup>
@@ -157,6 +187,15 @@ export default function UploadPage() {
         ) : (
           <WaitlistCTA dataProvider={selectedDataProvider} />
         )}
+        <div className="flex justify-center mt-32">
+          <Link href="/insights/" passHref={true}>
+            <a className="ml-3 inline-flex rounded-md shadow">
+              <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">
+                Live demo
+              </button>
+            </a>
+          </Link>
+        </div>
       </div>
       <Footer />
     </div>

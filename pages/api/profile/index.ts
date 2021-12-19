@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../../lib/prisma';
+import prisma from '../../../lib/serverLib/prisma';
 // https://vercel.com/guides/nextjs-prisma-postgres
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {

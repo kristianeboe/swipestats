@@ -9,7 +9,7 @@ export interface TinderDataJSON {
   Messages: Messages[];
   RoomsAndInteractions: RoomsAndInteractions;
   SwipeNotes: any[];
-  StudentVerifications: StudentVerifications;
+  StudentVerifications?: StudentVerifications;
 }
 
 export interface Usage {
@@ -39,12 +39,12 @@ interface User {
   gender: string;
   gender_filter: string;
   interested_in: string;
-  bio: string;
-  city: City;
-  connection_count: number;
+  bio?: string;
+  city?: City;
+  connection_count?: number;
   education: string; // I think this is depreciated
   instagram: Instagram;
-  spotify: Instagram; // no
+  spotify: Spotify; // no
   interestsc: Interest[];
   ip_address: string;
   is_traveling: boolean;

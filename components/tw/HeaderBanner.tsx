@@ -17,7 +17,7 @@ export function HeaderBanner() {
               </span>
             </p>
           </div>
-          <div className="order-4 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
+          <div className="order-4 mt-2 flex-shrink-0 w-full sm:order-2 sm:mr-2 sm:mt-0 sm:w-auto">
             <a
               href="#"
               className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-rose-600 bg-white hover:bg-rose-50"
@@ -25,9 +25,9 @@ export function HeaderBanner() {
               Learn more
             </a>
           </div>
-          <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+          <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
             <a
-              href="#"
+              href="https://swipestats.io"
               className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-rose-600 bg-white hover:bg-rose-50"
             >
               Old version
