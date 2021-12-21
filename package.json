@@ -12,10 +12,13 @@
     "db:studio": "npx prisma studio"
   },
   "dependencies": {
+    "@bugsnag/js": "^7.14.1",
+    "@bugsnag/plugin-react": "^7.14.0",
     "@prisma/client": "^3.5.0",
     "chart.js": "^3.6.2",
     "chartjs-adapter-date-fns": "^2.0.0",
     "date-fns": "^2.27.0",
+    "debug": "^4.3.3",
     "ky": "^0.28.7",
     "ky-universal": "^0.9.1",
     "mixpanel": "^0.14.0",

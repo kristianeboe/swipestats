@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import useStorage from '../../lib/hooks/useStorage';
+import { IsoDate } from '../../interfaces/utilInterfaces';
+import { useStorage, useLocalStorage } from '../../lib/hooks/useStorage';
 import { useTracking } from '../providers/TrackingProvider';
 
 export function EmailReminderSection() {
@@ -11,11 +12,15 @@ export function EmailReminderSection() {
   const [viewed, setViewed] = useState(false);
   const { track } = useTracking();
 
-  const subscribeKey = 'SWIPESTATS_REMINDER_SUBSCRIBE';
-  const { getItem, setItem } = useStorage();
+  // const { getItem, setItem } = useStorage();
 
-  const localSubscribed = getItem(subscribeKey);
-  const [subscribed, setSubscribed] = useState(localSubscribed);
+  // const localSubscribed = getItem(subscribeKey);
+  // const [subscribed, setSubscribed] = useState(localSubscribed);
+
+  const [subscribed, setSubscribed] = useLocalStorage<IsoDate | ''>(
+    'SWIPESTATS_REMINDER_SUBSCRIBE',
+    ''
+  );
 
   useEffect(() => {
     if (inView) {
@@ -129,8 +134,15 @@ export function EmailReminderSection() {
                   <button
                     onClick={() => {
                       const isoNow = new Date().toISOString();
-                      setItem(subscribeKey, isoNow);
-                      setSubscribed(isoNow);
+                      // setItem(subscribeKey, isoNow);
+                      const email = document.getElementById('mce-EMAIL')?.value;
+
+                      if (email) {
+                        setSubscribed(isoNow);
+                        track('Submit email reminder', {
+                          label: email,
+                        });
+                      }
                     }}
                     name="subscribe"
                     id="mc-embedded-subscribe"
@@ -143,7 +155,13 @@ export function EmailReminderSection() {
                 </div>
               </form>
             ) : (
-              <div className="block w-full rounded-md border border-transparent px-5 py-3 bg-gray-900 text-base font-medium text-white shadow text-center  sm:px-10 mt-12 sm:mx-auto sm:max-w-lg ">
+              <div
+                onClick={() => {
+                  setSubscribed('');
+                  track('Reset email reminder', {});
+                }}
+                className="block w-full rounded-md border border-transparent px-5 py-3 bg-gray-900 text-base font-medium text-white shadow text-center  sm:px-10 mt-12 sm:mx-auto sm:max-w-lg "
+              >
                 Talk to you soon!
               </div>
             )}

@@ -1,9 +1,20 @@
-// import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
+import '../styles/globals.css';
 import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import { TrackingProvider } from '../components/providers/TrackingProvider';
+import React, { useEffect } from 'react';
+import debug, { logger } from '../lib/debug';
+
+const log = logger(debug('app'));
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    // log('booting %s', 'Swipestats');
+    setTimeout(() => {
+      // throw new Error('Bugsnag test');
+    }, 1000);
+  }, []);
+
   return (
     <TrackingProvider>
       <Component {...pageProps} />

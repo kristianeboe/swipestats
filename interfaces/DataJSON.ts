@@ -1,3 +1,5 @@
+import { IsoDate } from './utilInterfaces';
+
 export interface TinderDataJSON {
   User: User;
   Usage: Usage;
@@ -29,11 +31,12 @@ export interface Usage {
 }
 
 interface User {
+  // TODO: Probably move all Date to IsoDate
   active_time: Date;
   age_filter_max: number;
   age_filter_min: number;
-  birth_date: Date;
-  create_date: Date;
+  birth_date: IsoDate;
+  create_date: IsoDate;
   email: string;
   full_name: string;
   gender: string;

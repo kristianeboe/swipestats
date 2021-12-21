@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+const log = logger(debug('upload'));
 
 export function UploadArea({
   //   files,
@@ -11,8 +12,9 @@ export function UploadArea({
   onAcceptedFileLoad: (d: string) => void;
 }) {
   const [files, setFiles] = useState<File[]>([]);
-
+  const { track } = useTracking();
   // const [rejectedFiles, setRejectedFiles] = useState<any[]>([])
+
   const onDrop = useCallback(
     (acceptedFiles) => {
       // Do something with the files
@@ -21,12 +23,26 @@ export function UploadArea({
       acceptedFiles.forEach((file: File) => {
         const reader = new FileReader();
 
-        reader.onabort = () => console.log('file reading was aborted');
-        reader.onerror = () => console.log('file reading has failed');
+        reader.onabort = () => {
+          log('file reading was aborted');
+          track('File reading aborted', {
+            providerId: 'tinder',
+          });
+        };
+        reader.onerror = () => {
+          log('file reading has failed');
+          track('File reading failed', {
+            providerId: 'tinder',
+          });
+        };
         reader.onload = () => {
           // Do whatever you want with the file contents
           // const binaryStr = reader.result;
           // console.log(binaryStr);
+          log('file reading has succeded');
+          track('File reading succeeded', {
+            providerId: 'tinder',
+          });
           onAcceptedFileLoad(reader.result as string);
         };
         // reader.readAsArrayBuffer(file);
@@ -111,6 +127,8 @@ export function UploadArea({
 /* This example requires Tailwind CSS v2.0+ */
 import { XCircleIcon } from '@heroicons/react/solid';
 import { Alert } from './tw/Alert';
+import { useTracking } from './providers/TrackingProvider';
+import debug, { logger } from '../lib/debug';
 
 export default function ErrorAlert() {
   return (

@@ -27,7 +27,7 @@ const supportLinks = [
 
 export default function DataRequestSupport() {
   return (
-    <div className="bg-white">
+    <div className="bg-white" id="data-request-support">
       {/* Header */}
       <div className="relative pb-32 bg-gray-800">
         <div className="absolute inset-0">

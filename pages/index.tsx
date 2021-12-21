@@ -23,6 +23,7 @@ import {
 import { Footer } from '../components/tw/Footer';
 import DataRequestSupport from '../components/tw/DataRequestSupport';
 import { Button } from '../components/tw/Button';
+import { useLocalStorage } from '../lib/hooks/useStorage';
 
 const features = [
   { name: 'Parse the Tinder data file', icon: CloudUploadIcon },
@@ -241,10 +242,13 @@ function TestimonialSection() {
   );
 }
 
-export default function Home() {
+export default function HomePage() {
+  const [dismissed, setDismissed] = useLocalStorage('SWIPESTATS_BANNER_DISMISSED', false);
+
   return (
-    <div className="bg-white">
-      <HeaderBanner />
+    <div className="bg-white" id="home-page">
+      {!dismissed && <HeaderBanner />}
+
       <Head>
         <title>Swipestats</title>
         <link rel="icon" href="/favicon.ico" />
@@ -280,7 +284,7 @@ export default function Home() {
                     world!
                   </p>
                 </div>
-                <form action="#" className="mt-12 sm:max-w-lg sm:w-full sm:flex">
+                <div className="mt-12 sm:max-w-lg sm:w-full sm:flex">
                   {/* <div className="min-w-0 flex-1">
                     <label htmlFor="hero-email" className="sr-only">
                       Email address
@@ -317,7 +321,14 @@ export default function Home() {
                       </button>
                     </a>
                   </Link>
-                </form>
+                  <Link href="/#data-request-support" passHref={true}>
+                    <a className="ml-3 inline-flex rounded-md shadow">
+                      <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">
+                        How do I get my data?
+                      </button>
+                    </a>
+                  </Link>
+                </div>
                 {/* <div className="flex">
                   <TrustPilotReviewCollector />
                 </div>

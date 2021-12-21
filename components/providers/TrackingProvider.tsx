@@ -1,94 +1,150 @@
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import mixpanel, { track } from 'mixpanel-browser';
-import useStorage from '../../lib/hooks/useStorage';
+import Bugsnag from '@bugsnag/js';
+import BugsnagPluginReact from '@bugsnag/plugin-react';
 
-export const GA4Id = process.env.NEXT_PUBLIC_GA4_ID;
-const MixpanelId = process.env.NEXT_PUBLIC_MIXPANEL_ID;
-const DEBUG = true;
+import { useStorage, useLocalStorage } from '../../lib/hooks/useStorage';
+import { logger } from '../../lib/debug';
+import debug from '../../lib/debug';
+
+// const log = logger('tracking');
+const log = logger(debug('tracking'));
+
+export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
+const MIXPANEL_ID = process.env.NEXT_PUBLIC_MIXPANEL_ID;
+export const BUGSNAG_API_KEY = process.env.NEXT_PUBLIC_BUGSNAG_API_KEY;
+
+const DEBUG = false;
 
 type ViewAction = 'View email reminder';
-type AnalyticsAction = 'Submit email reminder' | ViewAction;
+type AnalyticsAction = 'Submit email reminder' | ViewAction | 'page_view';
 // intersection observer https://www.npmjs.com/package/react-intersection-observer
 
 interface TrackingAttributes {
   [key: string]: string | number | any[];
 }
 
-// TOOD: Type this < interface | null>
-interface ITrackingContext {
-  track: (action: AnalyticsAction, attributes: TrackingAttributes) => void;
-}
-const TrackingContext = React.createContext<ITrackingContext | null>(null);
-
-function identify(profileId: string) {
-  console.log('identify');
-  if (DEBUG || !profileId) return;
-  // GA set user_props
-  mixpanel.identify(profileId);
-  gtag('set', {
-    user_id: profileId,
-  });
-}
-
-function pageview(path: string) {
-  console.log('pageview', path);
-  if (DEBUG) return;
-  track('page_view', {
-    page_path: path,
-  });
-  // ga4Event('page_view', {
-  //   page_path: path,
-  // });
-}
-
-function initializeTracking(profileId: string) {
-  console.log('initialize tracking', {
-    profileId,
-    ga4Id: GA4Id,
-    mixpanelId: MixpanelId,
-  });
-
-  if (DEBUG) return;
-
-  if (GA4Id) {
-    gtag('config', GA4Id, {
-      send_page_view: false,
-    });
-  }
-  if (MixpanelId) {
-    mixpanel.init(MixpanelId, { debug: DEBUG });
-  }
-  identify(profileId);
-}
-
 export const ga4Event = (
-  action: Gtag.EventNames,
-  { event_category, event_label, value, page_path }: Gtag.EventParams & { page_path: string }
+  action: Gtag.EventNames | AnalyticsAction,
+  {
+    event_category,
+    event_label,
+    value,
+    page_path,
+    ...otherAttributes
+  }: Gtag.EventParams & { page_path: string; [key: string]: any }
 ) => {
   window.gtag('event', action, {
     event_category,
     event_label,
     value,
     page_path,
+    ...otherAttributes,
   });
 };
 
+interface ITrackingContext {
+  track: (action: AnalyticsAction, attributes: TrackingAttributes) => void;
+}
+const TrackingContext = React.createContext<ITrackingContext | null>(null);
+
 function TrackingProvider(props: { children: React.ReactNode }) {
   const router = useRouter();
-  const { getItem } = useStorage();
-  const profileId = getItem('SWIPESTATS_ID');
+  const [profileId] = useLocalStorage('SWIPESTATS_ID', '');
+  // const [trackingInitialized, setTrackingInitialized] = useState(true);
+  const [trackingAccepted, setTrackingAccepted] = useLocalStorage(
+    'SWIPESTATS_ACCEPT_TRACKING',
+    true
+  );
 
-  // initialize
+  function initializeTracking() {
+    log('initialize tracking %O', {
+      ga4Id: GA4_ID,
+      mixpanelId: MIXPANEL_ID,
+      bugsnagApiKey: BUGSNAG_API_KEY,
+    });
+
+    if (DEBUG) return;
+
+    if (GA4_ID) {
+      gtag('config', GA4_ID, {
+        send_page_view: false,
+      });
+    }
+    if (MIXPANEL_ID) {
+      mixpanel.init(MIXPANEL_ID, { debug: DEBUG, api_host: 'https://api-eu.mixpanel.com' });
+    }
+    if (BUGSNAG_API_KEY) {
+      Bugsnag.start({
+        appVersion: '0.1.0',
+        apiKey: BUGSNAG_API_KEY,
+        plugins: [new BugsnagPluginReact()],
+        onError(event) {
+          if (profileId) {
+            event.setUser(profileId);
+          }
+          if (false) {
+            event.addMetadata('company', {
+              name: 'Acme Co.',
+              country: 'uk',
+            });
+          }
+        },
+      });
+    }
+  }
+
+  function identify() {
+    log('identify');
+    if (DEBUG || !profileId) return;
+    // GA set user_props
+    if (profileId) {
+      mixpanel.identify(profileId);
+    }
+
+    gtag('set', {
+      user_id: profileId,
+    });
+  }
+
+  function resetTracking() {
+    mixpanel.reset();
+    gtag('set', {
+      user_id: '',
+    });
+  }
+
+  function pageview(path: string) {
+    log('pageview %s', path);
+    if (DEBUG) return;
+    track('page_view', {
+      page_path: path,
+    });
+    // ga4Event('page_view', {
+    //   page_path: path,
+    // });
+  }
+
+  // initialize (goes first no matter what)
   useEffect(() => {
-    initializeTracking(profileId);
-    pageview(window.location.pathname);
-    // identify
-    // localhost?
-  }, []);
+    if (trackingAccepted) {
+      initializeTracking();
+    } else {
+      resetTracking();
+    }
+  }, [trackingAccepted]);
 
   useEffect(() => {
+    identify();
+  }, [profileId]);
+
+  useEffect(() => {
+    console.log('router effect');
     router.events.on('routeChangeComplete', pageview);
+    // no need for first pageview since google captures it
+    // pageview(window.location.pathname); // first pageview
+    mixpanel.track('page_view');
 
     return () => {
       router.events.off('routeChangeComplete', pageview);
@@ -96,10 +152,15 @@ function TrackingProvider(props: { children: React.ReactNode }) {
   }, [router.events]);
 
   function track(action: AnalyticsAction, attributes: TrackingAttributes) {
-    console.log('track', action, attributes);
+    const attrs = {
+      page_path: router.pathname,
+      ...attributes,
+    };
+    log('track %s %O', action, attrs);
     if (DEBUG) return;
     // mixpane
-    mixpanel.track(action, attributes);
+    mixpanel.track(action, attrs);
+    ga4Event(action, attrs);
     // ga4
   }
 

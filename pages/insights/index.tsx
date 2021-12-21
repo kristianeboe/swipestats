@@ -31,11 +31,17 @@ function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
 export default function InsightsPage() {
   // @ts-ignore
   const testData: TinderDataJSON = KristianData;
+  const data = testData;
+  const usageChartKeys = [
+    'matches',
+    'app_opens',
+    'swipes_likes',
+    'swipes_passes',
+    'messages_sent',
+    'messages_received',
+  ] as const;
 
   const matches = testData.Usage.matches;
-  console.log(matches);
-  // const matchesPrMonth = aggregateDataPrMonth(matches);
-  // console.log(matchesPrMonth);
 
   const matchesDataset = {
     label: 'Kristian',
@@ -51,8 +57,17 @@ export default function InsightsPage() {
     backgroundColor: 'rgba(53, 162, 235, 0.5)',
   };
 
+  const datasets = usageChartKeys.map((key) => [
+    {
+      label: 'Kristian',
+      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      data: aggregateDataPrMonthForChart(data.Usage[key]),
+    },
+  ]);
+
   return (
-    <div>
+    <div className="max-w-7xl mx-auto">
       <div className="pt-24 container mx-auto">
         <h1 className="text-center text-6xl font-black">Insights</h1>
         <div className="md:flex md:items-center m-6">
@@ -127,16 +142,24 @@ export default function InsightsPage() {
           </button>
         </div>
       </div>
-      <div className="flex">
-        <div className="w-full sm:max-w-lg">
-          <div className="bg-white overflow-hidden shadow sm:rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              {/* Content goes here */}
-              {/* <LineChart title="test" datasets={[matchesDataset]} /> */}
-              <Chart title="Matches" datasets={[matchesDataset]} />
+      <div className="flex flex-wrap justify-around ">
+        {datasets.map((ds, i) => {
+          const chartTitle = usageChartKeys[i].split('_').join(' ');
+          return (
+            <div className="w-full sm:max-w-lg h-96" key={i}>
+              <div className="bg-white overflow-hidden shadow sm:rounded-lg">
+                <div className="px-4 py-5 sm:p-6">
+                  {/* Content goes here */}
+                  {/* <LineChart title="test" datasets={[matchesDataset]} /> */}
+
+                  <Chart title={chartTitle} datasets={ds} />
+
+                  {/* <Chart title="App opens" datasets={[matchesDataset]} /> */}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );

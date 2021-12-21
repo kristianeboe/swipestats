@@ -16,8 +16,11 @@ import { useRouter } from 'next/router';
 // import { useClientRouter } from "use-client-router";
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
+import { UploadCTA } from '../../components/UploadCTA';
+import { useTracking } from '../../components/providers/TrackingProvider';
+import { createSwipestatsProfileFromJson } from '../../lib/extractAnonymizedData';
 
-type ProviderId = 'tinder' | 'hinge' | 'bumble';
+export type ProviderId = 'tinder' | 'hinge' | 'bumble';
 interface DataProvider {
   id: ProviderId;
   title: 'Tinder' | 'Hinge' | 'Bumble';
@@ -63,39 +66,45 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function UploadPage({ providerId }: { providerId: ProviderId }) {
   //   const { provider: providerId } = router.query;
   const [jsonProfile, setJsonProfile] = useState<TinderDataJSON | null>(null);
+  const { track } = useTracking();
 
-  function onAcceptedFileLoad(data: string) {
-    console.log('json data', data);
-    setJsonProfile(JSON.parse(data));
+  const routerProvider = dataProviders.find((p) => p.id === providerId);
+  const [selectedDataProvider, setDataProvider] = useState(routerProvider ?? dataProviders[0]);
+
+  if (routerProvider && routerProvider.id !== selectedDataProvider.id) {
+    setDataProvider(routerProvider);
   }
 
-  const [selectedDataProvider, setDataProvider] = useState(
-    dataProviders.find((p) => p.id === providerId) ?? dataProviders[0]
-  );
+  async function onAcceptedFileLoad(data: string) {
+    // console.log('json data', data);
+    setJsonProfile(JSON.parse(data));
+    const profile = await createSwipestatsProfileFromJson(data, selectedDataProvider.id);
+    console.log('Swipestats profile', profile);
+  }
 
   return (
     <div>
       <Head>
-        <title>Upload your </title>
-        <meta />
+        <title>Upload your {selectedDataProvider.title} data</title>
       </Head>
-      <div className="h-screen">
+      <div className="min-h-screen">
         {/* <Navbar simple={true} /> */}
         <StepHeader />
         <div className="bg-white">
-          <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-base font-semibold text-rose-600 tracking-wide uppercase">
-                Upload
-              </h2>
-              <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-                Visualize your {selectedDataProvider.title} data
-              </p>
-              <p className="max-w-xl mt-5 mx-auto text-xl text-gray-500">
-                Upload your data anonymously and compare it to demographics from around the world!
-              </p>
-            </div>
-            {!jsonProfile && (
+          {!jsonProfile && (
+            <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+              <div className="text-center">
+                <h2 className="text-base font-semibold text-rose-600 tracking-wide uppercase">
+                  Upload
+                </h2>
+                <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+                  Visualize your {selectedDataProvider.title} data
+                </p>
+                <p className="max-w-xl mt-5 mx-auto text-xl text-gray-500">
+                  Upload your data anonymously and compare it to demographics from around the world!
+                </p>
+              </div>
+
               <RadioGroup value={selectedDataProvider} onChange={setDataProvider}>
                 <RadioGroup.Label className="text-base font-medium text-gray-900 sr-only">
                   Select a data provider
@@ -162,15 +171,15 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
                   ))}
                 </div>
               </RadioGroup>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {selectedDataProvider.title === 'Tinder' ? (
           <div className="">
             <div className="flex flex-col justify-center items-center">
               {jsonProfile ? (
-                <UploadProfileCard dataJSON={jsonProfile} />
+                <UploadCTA jsonProfile={jsonProfile} />
               ) : (
                 <>
                   <UploadArea onAcceptedFileLoad={onAcceptedFileLoad} />
@@ -187,15 +196,6 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
         ) : (
           <WaitlistCTA dataProvider={selectedDataProvider} />
         )}
-        <div className="flex justify-center mt-32">
-          <Link href="/insights/" passHref={true}>
-            <a className="ml-3 inline-flex rounded-md shadow">
-              <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">
-                Live demo
-              </button>
-            </a>
-          </Link>
-        </div>
       </div>
       <Footer />
     </div>

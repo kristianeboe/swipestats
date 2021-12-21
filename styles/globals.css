@@ -1,3 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* #home-page {
+  scroll-behavior: smooth;
+} */
+
+html {
+  scroll-behavior: smooth;
+}

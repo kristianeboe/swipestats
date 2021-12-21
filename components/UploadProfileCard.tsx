@@ -32,7 +32,7 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
               'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80'
             }
             alt=""
-            className="object-cover pointer-events-none  h-64 w-full"
+            className="object-cover pointer-events-none  h-40 w-full"
           />
         </div>
         <div className="px-6 py-4">
@@ -41,7 +41,7 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
           </div>
           {userData.city && (
             <p className="text-gray-700 text-base">
-              {userData.city.name}, {userData.city.region}, 
+              {userData.city.name}, {userData.city.region},{' '}
               {travelLocationInfo[0].country.long_name}
             </p>
           )}
@@ -136,15 +136,7 @@ export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
           )}
         </div>
       </div>
-      <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-        <Link href="/insights/" passHref>
-          <a className="rounded-md shadow">
-            <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 md:py-4 md:text-lg md:px-10">
-              Upload
-            </button>
-          </a>
-        </Link>
-      </div>
+
       {debug && (
         <div>
           <pre>{JSON.stringify(json, undefined, 2)}</pre>

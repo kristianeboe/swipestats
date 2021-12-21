@@ -1,8 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { SpeakerphoneIcon, XIcon } from '@heroicons/react/outline';
+import { useLocalStorage } from '../../lib/hooks/useStorage';
+import { useTracking } from '../providers/TrackingProvider';
 
 export function HeaderBanner() {
-  return (
+  const [dismissed, setDismissed] = useLocalStorage('SWIPESTATS_BANNER_DISMISSED', false);
+  const { track } = useTracking();
+  return dismissed ? null : (
     <div className="bg-rose-600">
       <div className="mx-auto py-3 px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between flex-wrap">
@@ -37,6 +41,10 @@ export function HeaderBanner() {
             <button
               type="button"
               className="-mr-1 flex p-2 rounded-md hover:bg-rose-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2"
+              onClick={() => {
+                setDismissed(true);
+                track('Dismissed Banner', {});
+              }}
             >
               <span className="sr-only">Dismiss</span>
               <XIcon className="h-6 w-6 text-white" aria-hidden="true" />
