@@ -1,4 +1,4 @@
-import { TinderDataJSON } from '../interfaces/DataJSON';
+import { FullTinderDataJSON } from '../interfaces/FullTinderDataJSON';
 import Link from 'next/link';
 
 function getAgeFromBirthdate(birthDate: Date, birthDateString?: string) {
@@ -8,7 +8,7 @@ function getAgeFromBirthdate(birthDate: Date, birthDateString?: string) {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-export function UploadProfileCard({ dataJSON }: { dataJSON: TinderDataJSON }) {
+export function UploadProfileCard({ dataJSON }: { dataJSON: FullTinderDataJSON }) {
   const userId = 'asdfasdfasdf';
   const userData = dataJSON.User;
   const travelLocationInfo = dataJSON.User.travel_location_info;

@@ -4,7 +4,7 @@ import { useLocalStorage } from '../../lib/hooks/useStorage';
 import { useTracking } from '../providers/TrackingProvider';
 
 export function HeaderBanner() {
-  const [dismissed, setDismissed] = useLocalStorage('SWIPESTATS_BANNER_DISMISSED', false);
+  const [dismissed, setDismissed] = useLocalStorage('SWIPESTATS_BANNER_DISMISSED', true);
   const { track } = useTracking();
   return dismissed ? null : (
     <div className="bg-rose-600">

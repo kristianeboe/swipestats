@@ -1,7 +1,6 @@
-import { IsoDate } from './utilInterfaces';
+import { DateValueMap, IsoDate } from './utilInterfaces';
 
-export interface TinderDataJSON {
-  User: User;
+interface TinderDataJSONBase {
   Usage: Usage;
   Campaigns: Campaigns;
   Experiences: Experiences;
@@ -14,14 +13,22 @@ export interface TinderDataJSON {
   StudentVerifications?: StudentVerifications;
 }
 
+export interface AnonymizedTinderDataJSON extends TinderDataJSONBase {
+  User: AnonymizedTinderUser;
+}
+
+export interface FullTinderDataJSON extends TinderDataJSONBase {
+  User: FullTinderUser;
+}
+
 export interface Usage {
   app_opens: DateValueMap;
   swipes_likes: DateValueMap;
   swipes_passes: DateValueMap;
   superlikes: DateValueMap;
-  matches: Matches;
-  messages_sent: MessagesSent;
-  messages_received: MessagesReceived;
+  matches: DateValueMap;
+  messages_sent: DateValueMap;
+  messages_received: DateValueMap;
   advertising_id: {
     [date: string]: string; // empty string
   };
@@ -30,15 +37,14 @@ export interface Usage {
   };
 }
 
-interface User {
+interface AnonymizedTinderUser {
   // TODO: Probably move all Date to IsoDate
   active_time: Date;
   age_filter_max: number;
   age_filter_min: number;
   birth_date: IsoDate;
   create_date: IsoDate;
-  email: string;
-  full_name: string;
+
   gender: string;
   gender_filter: string;
   interested_in: string;
@@ -52,7 +58,7 @@ interface User {
   ip_address: string;
   is_traveling: boolean;
   jobs: Job[];
-  name: string;
+
   pos: Pos;
   schools: School[];
   travel_location_info: TravelLocationInfo[];
@@ -60,11 +66,18 @@ interface User {
     platform: 'ios' | 'android' | string;
   };
   travel_pos: TravelPos;
-  username: string;
-  phone_id: string;
+
   college: any[];
   user_interests?: string[]; //  "Fashion","Grab a drink","Cooking","Brunch","Wine"
   sexual_orientations?: string[]; // ['str']
+}
+
+interface FullTinderUser extends AnonymizedTinderUser {
+  email: string;
+  full_name: string;
+  name: string;
+  username: string;
+  phone_id: string;
 }
 
 export interface Experiences {
@@ -229,36 +242,6 @@ export interface Purchases {
 
 export interface Spotify {
   spotify_connected: boolean;
-}
-
-type DateKeyString = `${number}-${number}-${number}`;
-
-export interface DateValueMap {
-  [dateKey: DateKeyString]: number;
-}
-
-export interface AppOpens {
-  [dateKey: DateKeyString]: number;
-}
-
-export interface SwipesLikes {
-  [dateKey: DateKeyString]: number;
-}
-
-export interface SwipesPasses {
-  [dateKey: DateKeyString]: number;
-}
-
-export interface Matches {
-  [dateKey: DateKeyString]: number;
-}
-
-export interface MessagesSent {
-  [dateKey: DateKeyString]: number;
-}
-
-export interface MessagesReceived {
-  [dateKey: DateKeyString]: number;
 }
 
 export interface Message {

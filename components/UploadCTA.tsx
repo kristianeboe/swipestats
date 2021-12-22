@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { TinderDataJSON } from '../interfaces/DataJSON';
+import { FullTinderDataJSON } from '../interfaces/FullTinderDataJSON';
 import { UploadProfileCard } from './UploadProfileCard';
 
-export function UploadCTA(props: { jsonProfile: TinderDataJSON }) {
+export function UploadCTA(props: { jsonProfile: FullTinderDataJSON }) {
   return (
     <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
       <div className="flex flex-wrap justify-around items-center">

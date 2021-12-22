@@ -4,7 +4,7 @@ import { Footer } from '../../components/tw/Footer';
 import Navbar from '../../components/tw/Navbar';
 import { UploadArea } from '../../components/UploadArea';
 import { UploadProfileCard } from '../../components/UploadProfileCard';
-import { TinderDataJSON } from '../../interfaces/DataJSON';
+import { FullTinderDataJSON } from '../../interfaces/FullTinderDataJSON';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 import ky from 'ky-universal';
@@ -65,7 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function UploadPage({ providerId }: { providerId: ProviderId }) {
   //   const { provider: providerId } = router.query;
-  const [jsonProfile, setJsonProfile] = useState<TinderDataJSON | null>(null);
+  const [jsonProfile, setJsonProfile] = useState<FullTinderDataJSON | null>(null);
   const { track } = useTracking();
 
   const routerProvider = dataProviders.find((p) => p.id === providerId);

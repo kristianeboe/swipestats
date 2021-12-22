@@ -10,37 +10,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Profile {
-  id   String @id @default(uuid())
-  // gender
-  user Json
+model User {
+  // id String @id @default(uuid())
+  id            Int            @id @default(autoincrement())
+  tinderProfile TinderProfile? // a user could actually have multiple profiles...
 
-  matches  Json
-  appOpens Json
+  dataFiles OriginalAnonymizedFile[]
 
-  swipeLikes  Json
-  swipePasses Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
+model TinderProfile {
+  tinderId         String? @unique
+  // usage
+  appOpens         Json
+  matches          Json
+  swipeLikes       Json
+  swipePasses      Json
   messagesSent     Json
   messagesReceived Json
-  dataFile         OriginalFile @relation(fields: [originalFileId], references: [id])
+  // meta calculated during creation
+  messagesMeta     Json
+  // relation
+  userId           Int     @unique
+  user             User    @relation(fields: [userId], references: [id])
 
-  originalFileId String
+  customDataId String?
+  customData   CustomData? @relation(fields: [customDataId], references: [id])
 }
 
-model OriginalFile {
-  id       String    @id @default(uuid())
-  fileName String
-  file     Json
-  Profile  Profile[]
+model CustomData {
+  id String @unique
+
+  phoneNumbersExchanged Int
+  dateArranged          Int
+  dateAttended          Int
+  dateCreepy            Int
+  dateNoSpark           Int
+  multipleDates         Int
+  sleptWithFirstDate    Int
+  sleptWithEventually   Int
+  relationshipsStarted  Int
+
+  // dataProvider?
+
+  TinderProfile TinderProfile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+model OriginalAnonymizedFile {
+  // id       String    @id @default(uuid())
+  id           Int          @id @default(autoincrement())
+  dataProvider DataProvider
+  file         Json
+
+  userId    Int
+  User      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+// Non user related
 model Waitlist {
-  id           Int      @id @default(autoincrement())
-  email        String   @db.VarChar(255)
-  dataProvider String   @db.VarChar(255)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id           Int          @id @default(autoincrement())
+  email        String       @db.VarChar(255)
+  dataProvider DataProvider
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
-// Conversations
+// Utils
+enum DataProvider {
+  TINDER
+  HINGE
+  BUMBLE
+}

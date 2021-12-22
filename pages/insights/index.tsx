@@ -2,7 +2,7 @@ import { Chart } from '../../components/charts/Chart';
 import { LineChart } from '../../components/charts/LineChart';
 import KristianData from '../../fixtures/kristian-data.json';
 import DeepaData from '../../fixtures/deepa-data.json';
-import { DateValueMap, TinderDataJSON } from '../../interfaces/DataJSON';
+import { DateValueMap, FullTinderDataJSON } from '../../interfaces/FullTinderDataJSON';
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
   // Use reduce to aggregate your data. Pass around a hash so that we have
@@ -30,7 +30,7 @@ function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
 
 export default function InsightsPage() {
   // @ts-ignore
-  const testData: TinderDataJSON = KristianData;
+  const testData: FullTinderDataJSON = KristianData;
   const data = testData;
   const usageChartKeys = [
     'matches',

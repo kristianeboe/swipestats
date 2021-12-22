@@ -15,6 +15,7 @@
     "@bugsnag/js": "^7.14.1",
     "@bugsnag/plugin-react": "^7.14.0",
     "@prisma/client": "^3.5.0",
+    "@sentry/nextjs": "^6.16.1",
     "chart.js": "^3.6.2",
     "chartjs-adapter-date-fns": "^2.0.0",
     "date-fns": "^2.27.0",

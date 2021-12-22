@@ -1,10 +1,10 @@
-import { TinderDataJSON } from '../interfaces/DataJSON';
+import { FullTinderDataJSON } from '../interfaces/FullTinderDataJSON';
 import { IsoDate } from '../interfaces/utilInterfaces';
 import { ProviderId } from '../pages/upload/[provider]';
 import { createSHA256Hash } from './cryptoUtils';
 import debug, { logger } from './debug';
 const log = logger(debug('data-extraction'));
-// function getSecretIdOld(tinderData: TinderDataJSON) {
+// function getSecretIdOld(tinderData: FullTinderDataJSON) {
 //     const secretId = md5(
 //       tinderData.User.email +
 //         tinderData.User.username +
@@ -34,7 +34,7 @@ export async function createSwipestatsProfileFromJson(
   switch (provider) {
     case 'tinder':
       try {
-        const tinderJson = JSON.parse(jsonString) as TinderDataJSON;
+        const tinderJson = JSON.parse(jsonString) as FullTinderDataJSON;
         log('Tinder data parsed successfully');
 
         const profileId = await createSwipestatsProfileId(
