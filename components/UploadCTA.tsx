@@ -1,8 +1,47 @@
+import ky from 'ky';
 import Link from 'next/link';
-import { FullTinderDataJSON } from '../interfaces/FullTinderDataJSON';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { FullTinderDataJSON } from '../interfaces/TinderDataJSON';
+import debug, { logger } from '../lib/debug';
+import { SwipestatsProfilePayload } from '../pages/api/profiles';
 import { UploadProfileCard } from './UploadProfileCard';
+import { Button } from '../components/tw/Button';
+import { useTracking } from './providers/TrackingProvider';
+import { TinderProfilePrisma } from '../pages/api/profiles/index';
 
-export function UploadCTA(props: { jsonProfile: FullTinderDataJSON }) {
+const log = logger(debug('upload-cta'));
+export function UploadCTA(props: {
+  swipestatsProfilePayload: SwipestatsProfilePayload;
+  jsonProfile: FullTinderDataJSON;
+}) {
+  const router = useRouter();
+  const { track } = useTracking();
+  const [loading, setLoading] = useState(false);
+
+  async function createProfile() {
+    log('Initiate upload');
+    setLoading(true);
+
+    await ky
+      .post('/api/profiles', {
+        json: props.swipestatsProfilePayload,
+        timeout: false,
+      })
+      .json<TinderProfilePrisma>()
+      .then((tinderProfile) => {
+        log('Tinder profile created API Return %O', tinderProfile);
+        track('Tinder profile created', {
+          tinderId: tinderProfile.tinderId,
+        });
+        router.push('/insights/?id=' + tinderProfile.tinderId);
+      })
+      .catch((e) => {
+        setLoading(false);
+        console.error(e);
+      });
+  }
+
   return (
     <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
       <div className="flex flex-wrap justify-around items-center">
@@ -15,13 +54,17 @@ export function UploadCTA(props: { jsonProfile: FullTinderDataJSON }) {
             Upload your data anonymously and compare it to demographics from around the world!
           </p>
           <div className="mt-5 max-w-md  flex  md:mt-8 justify-center mx-auto md:mx-0  md:justify-start  ">
-            <Link href="/insights/" passHref>
-              <a className="rounded-md shadow">
-                <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 md:py-4 md:text-lg md:px-10">
-                  Upload
-                </button>
-              </a>
-            </Link>
+            {/* <Link href="/insights/" passHref> */}
+            <Button onClick={createProfile} content="Upload" loading={loading} />
+            {/* <a className="rounded-md shadow">
+              <button
+                onClick={createProfile}
+                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 md:py-4 md:text-lg md:px-10"
+              >
+                Upload
+              </button>
+            </a> */}
+            {/* </Link> */}
             <Link href="/insights/" passHref={true}>
               <a className="ml-3 inline-flex rounded-md shadow">
                 <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">

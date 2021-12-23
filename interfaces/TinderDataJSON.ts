@@ -37,7 +37,7 @@ export interface Usage {
   };
 }
 
-interface AnonymizedTinderUser {
+interface TinderUserBase {
   // TODO: Probably move all Date to IsoDate
   active_time: Date;
   age_filter_max: number;
@@ -52,9 +52,8 @@ interface AnonymizedTinderUser {
   city?: City;
   connection_count?: number;
   education: string; // I think this is depreciated
-  instagram: Instagram;
-  spotify: Spotify; // no
-  interestsc: Interest[];
+
+  interests: Interest[];
   ip_address: string;
   is_traveling: boolean;
   jobs: Job[];
@@ -72,12 +71,19 @@ interface AnonymizedTinderUser {
   sexual_orientations?: string[]; // ['str']
 }
 
-interface FullTinderUser extends AnonymizedTinderUser {
+interface AnonymizedTinderUser extends TinderUserBase {
+  instagram: boolean;
+  spotify: boolean;
+}
+
+interface FullTinderUser extends TinderUserBase {
   email: string;
   full_name: string;
   name: string;
   username: string;
   phone_id: string;
+  instagram?: Instagram;
+  spotify?: Spotify;
 }
 
 export interface Experiences {

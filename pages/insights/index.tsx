@@ -2,7 +2,15 @@ import { Chart } from '../../components/charts/Chart';
 import { LineChart } from '../../components/charts/LineChart';
 import KristianData from '../../fixtures/kristian-data.json';
 import DeepaData from '../../fixtures/deepa-data.json';
-import { DateValueMap, FullTinderDataJSON } from '../../interfaces/FullTinderDataJSON';
+import { FullTinderDataJSON } from '../../interfaces/TinderDataJSON';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { DateValueMap } from '../../interfaces/utilInterfaces';
+import { Alert } from '../../components/tw/Alert';
+import ky from 'ky';
+import { TinderProfilePrisma } from '../api/profiles';
+import debug, { logger } from '../../lib/debug';
+const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
   // Use reduce to aggregate your data. Pass around a hash so that we have
@@ -28,18 +36,70 @@ function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
   // return finalResult;
 }
 
+function djb2(str: string) {
+  var hash = 5381;
+  for (var i = 0; i < str.length; i++) {
+    hash = (hash << 5) + hash + str.charCodeAt(i); /* hash * 33 + c */
+  }
+  return hash;
+}
+
+function hashStringToColor(str: string, opacity: number = 1) {
+  var hash = djb2(str);
+  var r = (hash & 0xff0000) >> 16;
+  var g = (hash & 0x00ff00) >> 8;
+  var b = hash & 0x0000ff;
+  // return "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2);
+  return 'rgba(' + r + ',' + g + ',' + b + ', ' + opacity + ')';
+}
+
+// Returns an array of 3 values for rgb
+function randomRGB(opacity: number = 1) {
+  var red = Math.floor(Math.random() * 256);
+  var green = Math.floor(Math.random() * 256);
+  var blue = Math.floor(Math.random() * 256);
+  return 'rgba(' + [red, green, blue, opacity].join(',') + ')';
+}
+
 export default function InsightsPage() {
   // @ts-ignore
   const testData: FullTinderDataJSON = KristianData;
   const data = testData;
+  // const usageChartKeys = [
+  //   'matches',
+  //   'app_opens',
+  //   'swipes_likes',
+  //   'swipes_passes',
+  //   'messages_sent',
+  //   'messages_received',
+  // ] as const;
   const usageChartKeys = [
     'matches',
-    'app_opens',
-    'swipes_likes',
-    'swipes_passes',
-    'messages_sent',
-    'messages_received',
+    'appOpens',
+    'swipeLikes',
+    'swipePasses',
+    'messagesSent',
+    'messagesReceived',
   ] as const;
+  const router = useRouter();
+
+  const [profiles, setProfiles] = useState<TinderProfilePrisma[]>([]);
+  const [errors, setErrors] = useState<any[]>([]);
+
+  const initialId = router.query?.id;
+
+  useEffect(() => {
+    if (initialId) {
+      ky.get('/api/profiles?tinderId=' + initialId)
+        .json<TinderProfilePrisma>()
+        .then((tp) => {
+          setProfiles([tp]);
+        })
+        .catch((e) => {
+          setErrors([e]);
+        });
+    }
+  }, [initialId]);
 
   const matches = testData.Usage.matches;
 
@@ -57,14 +117,30 @@ export default function InsightsPage() {
     backgroundColor: 'rgba(53, 162, 235, 0.5)',
   };
 
-  const datasets = usageChartKeys.map((key) => [
-    {
-      label: 'Kristian',
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      data: aggregateDataPrMonthForChart(data.Usage[key]),
-    },
-  ]);
+  profiles.map((p) => {
+    log('loaded profile %O', {
+      p,
+      keys: Object.keys(p),
+    });
+  });
+
+  const datasets = usageChartKeys.map((key) =>
+    profiles.map((p) => {
+      const baseColor = randomRGB();
+      const birthDate = new Date(p.birthDate).toISOString();
+      const aggregateDataForKey = aggregateDataPrMonthForChart(p[key]);
+
+      return {
+        key: key,
+        label: p.tinderId,
+        borderColor: birthDate ? hashStringToColor(birthDate) : randomRGB(), // 'rgb(255, 99, 132)',
+        backgroundColor: birthDate ? hashStringToColor(birthDate, 0.5) : randomRGB(0.5), // 'rgb(255, 99, 132, 0.5)',
+        data: aggregateDataForKey,
+      };
+    })
+  );
+
+  log('datasets %O', datasets);
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -142,6 +218,9 @@ export default function InsightsPage() {
           </button>
         </div>
       </div>
+      {errors.length > 0 && (
+        <Alert category="danger" title="Erro" descriptionList={errors.map((e) => e.message)} />
+      )}
       <div className="flex flex-wrap justify-around ">
         {datasets.map((ds, i) => {
           const chartTitle = usageChartKeys[i].split('_').join(' ');

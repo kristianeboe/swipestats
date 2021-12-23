@@ -10,7 +10,7 @@ export interface SwipestatsProfile {
   hingeId: string;
   bumbleId: string;
 
-  usage: {
+  tinderProfile: {
     appOpens: DateValueMap;
     matches: DateValueMap;
     swipeLikes: DateValueMap;

@@ -22,7 +22,21 @@ model User {
 }
 
 model TinderProfile {
-  tinderId         String? @unique
+  tinderId            String?  @unique
+  // tinderUser
+  birthDate           DateTime
+  createDate          DateTime
+  gender              String // probably an enum
+  bio                 String?
+  city                String?
+  region              String?
+  instagram           Boolean
+  spotify             Boolean
+  jobs                Json // title, company
+  schools             Json // displayed, name
+  user_interests      String[] // Should probably be enum
+  sexual_orientations String[] // Should probably be enum
+
   // usage
   appOpens         Json
   matches          Json
@@ -33,8 +47,8 @@ model TinderProfile {
   // meta calculated during creation
   messagesMeta     Json
   // relation
-  userId           Int     @unique
-  user             User    @relation(fields: [userId], references: [id])
+  userId           Int  @unique
+  user             User @relation(fields: [userId], references: [id])
 
   customDataId String?
   customData   CustomData? @relation(fields: [customDataId], references: [id])

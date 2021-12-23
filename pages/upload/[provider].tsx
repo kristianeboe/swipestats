@@ -4,7 +4,7 @@ import { Footer } from '../../components/tw/Footer';
 import Navbar from '../../components/tw/Navbar';
 import { UploadArea } from '../../components/UploadArea';
 import { UploadProfileCard } from '../../components/UploadProfileCard';
-import { FullTinderDataJSON } from '../../interfaces/FullTinderDataJSON';
+import { FullTinderDataJSON } from '../../interfaces/TinderDataJSON';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 import ky from 'ky-universal';
@@ -18,7 +18,9 @@ import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { UploadCTA } from '../../components/UploadCTA';
 import { useTracking } from '../../components/providers/TrackingProvider';
-import { createSwipestatsProfileFromJson } from '../../lib/extractAnonymizedData';
+import { createSwipestatsProfilePayloadFromJson } from '../../lib/extractAnonymizedData';
+import { SwipestatsProfile } from '../../interfaces/SwipestatsProfile';
+import { SwipestatsProfilePayload } from '../api/profiles';
 
 export type ProviderId = 'tinder' | 'hinge' | 'bumble';
 interface DataProvider {
@@ -66,6 +68,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function UploadPage({ providerId }: { providerId: ProviderId }) {
   //   const { provider: providerId } = router.query;
   const [jsonProfile, setJsonProfile] = useState<FullTinderDataJSON | null>(null);
+  const [swipestatsProfilePayload, setSwipestatsProfilePayload] =
+    useState<SwipestatsProfilePayload | null>(null);
   const { track } = useTracking();
 
   const routerProvider = dataProviders.find((p) => p.id === providerId);
@@ -78,8 +82,9 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
   async function onAcceptedFileLoad(data: string) {
     // console.log('json data', data);
     setJsonProfile(JSON.parse(data));
-    const profile = await createSwipestatsProfileFromJson(data, selectedDataProvider.id);
-    console.log('Swipestats profile', profile);
+    const payload = await createSwipestatsProfilePayloadFromJson(data, selectedDataProvider.id);
+    setSwipestatsProfilePayload(payload);
+    console.log('Swipestats payload', payload);
   }
 
   return (
@@ -178,8 +183,11 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
         {selectedDataProvider.title === 'Tinder' ? (
           <div className="">
             <div className="flex flex-col justify-center items-center">
-              {jsonProfile ? (
-                <UploadCTA jsonProfile={jsonProfile} />
+              {jsonProfile && swipestatsProfilePayload ? (
+                <UploadCTA
+                  swipestatsProfilePayload={swipestatsProfilePayload}
+                  jsonProfile={jsonProfile}
+                />
               ) : (
                 <>
                   <UploadArea onAcceptedFileLoad={onAcceptedFileLoad} />
@@ -215,7 +223,7 @@ export function WaitlistCTA({ dataProvider }: { dataProvider: DataProvider }) {
     e.preventDefault();
     setLoading(true);
     await ky
-      .post('api/waitlist', {
+      .post('/api/waitlist', {
         json: {
           email,
           dataProvider: dataProvider.title,

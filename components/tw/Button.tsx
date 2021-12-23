@@ -23,6 +23,7 @@ export function Button({
   content?: string;
   children?: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }) {
   return (
     <button
@@ -33,6 +34,7 @@ export function Button({
         props.className || ''
       )}
       disabled={props.loading || props.disabled}
+      onClick={props.onClick}
     >
       {props.loading ? (
         <svg

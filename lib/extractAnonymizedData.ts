@@ -1,8 +1,11 @@
-import { FullTinderDataJSON } from '../interfaces/FullTinderDataJSON';
+import { AnonymizedTinderDataJSON, FullTinderDataJSON } from '../interfaces/TinderDataJSON';
+import { SwipestatsProfile } from '../interfaces/SwipestatsProfile';
 import { IsoDate } from '../interfaces/utilInterfaces';
 import { ProviderId } from '../pages/upload/[provider]';
 import { createSHA256Hash } from './cryptoUtils';
 import debug, { logger } from './debug';
+import { omitMultipleKeys } from './utils';
+import { SwipestatsProfilePayload } from '../pages/api/profiles';
 const log = logger(debug('data-extraction'));
 // function getSecretIdOld(tinderData: FullTinderDataJSON) {
 //     const secretId = md5(
@@ -15,9 +18,6 @@ const log = logger(debug('data-extraction'));
 //   }
 
 // should be pretty similar to database, except in database there is also the original (anonymized) json
-interface SwipestatsProfile {
-  id: string;
-}
 
 async function createSwipestatsProfileId(birthDate: string, appProfileCreateDate: string) {
   // pretty unlikely collision IMO
@@ -27,22 +27,42 @@ async function createSwipestatsProfileId(birthDate: string, appProfileCreateDate
   return profileId;
 }
 
-export async function createSwipestatsProfileFromJson(
+export async function createSwipestatsProfilePayloadFromJson(
   jsonString: string,
   provider: ProviderId
-): Promise<SwipestatsProfile> {
+): Promise<SwipestatsProfilePayload> {
   switch (provider) {
     case 'tinder':
       try {
-        const tinderJson = JSON.parse(jsonString) as FullTinderDataJSON;
+        const tinderJson: FullTinderDataJSON = JSON.parse(jsonString);
         log('Tinder data parsed successfully');
+        const anonymizedTinderJson: AnonymizedTinderDataJSON = {
+          ...tinderJson,
+          User: {
+            ...omitMultipleKeys(tinderJson.User)(
+              'email',
+              'full_name',
+              'name',
+              'username',
+              'phone_id'
+            ),
+            instagram: !!tinderJson.User.instagram,
+            spotify: !!tinderJson.User.spotify?.spotify_connected,
+          },
+        };
+        log('Tinder data anonymized successfully');
 
         const profileId = await createSwipestatsProfileId(
-          tinderJson.User.birth_date,
-          tinderJson.User.create_date
+          anonymizedTinderJson.User.birth_date,
+          anonymizedTinderJson.User.create_date
         );
 
-        return { id: profileId };
+        const swipestatsProfilePayload: SwipestatsProfilePayload = {
+          tinderId: profileId,
+          anonymizedTinderJson,
+        };
+
+        return swipestatsProfilePayload;
       } catch (error) {
         console.error('Tinder data extraction failed', error);
         throw new Error('Something went wrong with profile extraction');

@@ -5,6 +5,7 @@ import 'chartjs-adapter-date-fns';
 export function Chart(props: {
   title: string;
   datasets: {
+    key: string;
     data: { x: string; y: number }[];
     label: string;
     borderColor: string;

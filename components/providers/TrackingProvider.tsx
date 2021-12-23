@@ -13,7 +13,7 @@ const log = logger(debug('tracking'));
 
 export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
 const MIXPANEL_ID = process.env.NEXT_PUBLIC_MIXPANEL_ID;
-export const BUGSNAG_API_KEY = process.env.NEXT_PUBLIC_BUGSNAG_API_KEY;
+const BUGSNAG_API_KEY = process.env.NEXT_PUBLIC_BUGSNAG_API_KEY;
 
 const DEBUG = false;
 
@@ -49,7 +49,7 @@ interface ITrackingContext {
 }
 const TrackingContext = React.createContext<ITrackingContext | null>(null);
 
-function TrackingProvider(props: { children: React.ReactNode }) {
+export function TrackingProvider(props: { children: React.ReactNode }) {
   const router = useRouter();
   const [profileId] = useLocalStorage('SWIPESTATS_ID', '');
   // const [trackingInitialized, setTrackingInitialized] = useState(true);
@@ -67,10 +67,14 @@ function TrackingProvider(props: { children: React.ReactNode }) {
 
     if (DEBUG) return;
 
-    if (GA4_ID) {
+    if (false && GA4_ID) {
+      const sendPageView = true;
       gtag('config', GA4_ID, {
-        send_page_view: false,
+        send_page_view: sendPageView,
       });
+      if (sendPageView) {
+        log('Initial google pageview');
+      }
     }
     if (MIXPANEL_ID) {
       mixpanel.init(MIXPANEL_ID, { debug: DEBUG, api_host: 'https://api-eu.mixpanel.com' });
@@ -103,22 +107,22 @@ function TrackingProvider(props: { children: React.ReactNode }) {
       mixpanel.identify(profileId);
     }
 
-    gtag('set', {
+    gtag('set', 'user_properties', {
       user_id: profileId,
     });
   }
 
   function resetTracking() {
     mixpanel.reset();
-    gtag('set', {
+    gtag('set', 'user_properties', {
       user_id: '',
     });
   }
 
   function pageview(path: string) {
-    log('pageview %s', path);
+    // log('pageview %s', path);
     if (DEBUG) return;
-    track('page_view', {
+    track('page_view_custom', {
       page_path: path,
     });
     // ga4Event('page_view', {
@@ -160,7 +164,9 @@ function TrackingProvider(props: { children: React.ReactNode }) {
     if (DEBUG) return;
     // mixpane
     mixpanel.track(action, attrs);
-    ga4Event(action, attrs);
+    if (action !== 'page_view_custom') {
+      ga4Event(action, attrs);
+    }
     // ga4
   }
 
@@ -174,12 +180,10 @@ function TrackingProvider(props: { children: React.ReactNode }) {
   );
 }
 
-const useTracking = () => {
+export const useTracking = () => {
   const context = React.useContext(TrackingContext);
   if (context === null) {
     throw new Error('useAnalytics must be used within an AnalyticsProvider');
   }
   return context;
 };
-
-export { TrackingProvider, useTracking };
