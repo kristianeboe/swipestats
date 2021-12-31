@@ -43,7 +43,7 @@ export function HeaderBanner() {
               className="-mr-1 flex p-2 rounded-md hover:bg-rose-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2"
               onClick={() => {
                 setDismissed(true);
-                track('Dismissed Banner', {});
+                track('Banner Dismissed', {});
               }}
             >
               <span className="sr-only">Dismiss</span>

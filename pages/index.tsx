@@ -24,6 +24,7 @@ import { Footer } from '../components/tw/Footer';
 import DataRequestSupport from '../components/tw/DataRequestSupport';
 import { Button } from '../components/tw/Button';
 import { useLocalStorage } from '../lib/hooks/useStorage';
+import { PressSection } from '../components/tw/PressSection';
 
 const features = [
   { name: 'Parse the Tinder data file', icon: CloudUploadIcon },
@@ -285,49 +286,24 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="mt-12 sm:max-w-lg sm:w-full sm:flex">
-                  {/* <div className="min-w-0 flex-1">
-                    <label htmlFor="hero-email" className="sr-only">
-                      Email address
-                    </label>
-                    <input
-                      id="hero-email"
-                      type="email"
-                      className="block w-full border border-gray-300 rounded-md px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-rose-500 focus:ring-rose-500"
-                      placeholder="Enter your email"
-                    />
-                  </div> */}
                   <Link href="/upload/tinder/" passHref={true}>
                     <a className="mt-4 sm:mt-0">
-                      {/* <button
-                        type="submit"
-                        className="block w-full rounded-md border border-transparent px-5 py-3 bg-rose-500 text-base font-medium text-white shadow hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10"
-                      >
-                        Upload
-                      </button> */}
-                      <Button type="submit" content="Upload" />
+                      <Button content="Upload" />
                     </a>
                   </Link>
-                  {/* <Link href="/insights/" passHref={true}>
-                    <a className="mt-4 sm:mt-0 sm:ml-3">
-                      <button className="block w-full rounded-md border border-transparent px-5 py-3 bg-white text-base font-medium text-gray-900 shadow hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 sm:px-10">
-                        Live demo
-                      </button>
-                    </a>
-                  </Link> */}
+
                   <Link href="/insights/" passHref={true}>
-                    <a className="ml-3 inline-flex rounded-md shadow">
-                      <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">
-                        Live demo
-                      </button>
+                    <a className="ml-3 ">
+                      <Button content="Live Demo" category="secondary" />
                     </a>
                   </Link>
-                  <Link href="/#data-request-support" passHref={true}>
+                  {/* <Link href="/#data-request-support" passHref={true}>
                     <a className="ml-3 inline-flex rounded-md shadow">
                       <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">
                         How do I get my data?
                       </button>
                     </a>
-                  </Link>
+                  </Link> */}
                 </div>
                 {/* <div className="flex">
                   <TrustPilotReviewCollector />
@@ -404,8 +380,8 @@ export default function HomePage() {
 
         {/* featrues */}
 
-        <div className="relative bg-white py-16 sm:py-24 lg:py-32">
-          <div className="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl">
+        <div className="relative bg-white py-16 sm:pt-24">
+          <div className="mx-auto max-w-md px-4 text-center sm:max-w-4xl sm:px-6 lg:px-8 lg:max-w-7xl">
             <h2 className="text-base font-semibold tracking-wider text-rose-600 uppercase">
               How it works
             </h2>
@@ -421,7 +397,7 @@ export default function HomePage() {
               <div className="flex flex-wrap justify-center">
                 {features.map((feature) => (
                   <div key={feature.name} className="pt-6">
-                    <div className="w-full max-w-xs bg-gray-50 rounded-lg px-6 pb-8 mx-8 mb-8">
+                    <div className="w-full max-w-xs bg-gray-50 rounded-lg px-6 pb-8 sm:mx-8 mb-8">
                       <div className="">
                         <div>
                           <span className="inline-flex items-center justify-center p-3 bg-rose-500 rounded-md shadow-lg -mt-6">
@@ -484,66 +460,37 @@ export default function HomePage() {
           </div>
         )}
 
-        {0 > 0.5 ? (
-          <div className="bg-white">
-            <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                <span className="block">Ready to explore your data?</span>
-                <span className="block">Upload your data today</span>
-              </h2>
-              <div className="mt-8 flex justify-center">
-                <div className="inline-flex rounded-md shadow">
-                  <a
-                    href="#"
-                    className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700"
-                  >
-                    Get started
-                  </a>
-                </div>
-                <div className="ml-3 inline-flex">
-                  <a
-                    href="#"
-                    className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-700 bg-rose-100 hover:bg-rose-200"
-                  >
-                    Learn more
-                  </a>
-                </div>
+        <div className="">
+          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 md:flex md:items-center md:justify-between">
+            <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              <span className="block">Ready to explore?</span>
+              <span className="block text-rose-600">Upload your data today</span>
+            </h2>
+            <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+              <div className="inline-flex rounded-md shadow">
+                <a
+                  href="#"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700"
+                >
+                  Get started
+                </a>
+              </div>
+              <div className="ml-3 inline-flex rounded-md shadow">
+                <a
+                  href="#"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50"
+                >
+                  Live demo
+                </a>
               </div>
             </div>
           </div>
-        ) : (
-          // horizontal
-          <div className="">
-            <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
-              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                <span className="block">Ready to explore?</span>
-                <span className="block text-rose-600">Upload your data today</span>
-              </h2>
-              <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-                <div className="inline-flex rounded-md shadow">
-                  <a
-                    href="#"
-                    className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700"
-                  >
-                    Get started
-                  </a>
-                </div>
-                <div className="ml-3 inline-flex rounded-md shadow">
-                  <a
-                    href="#"
-                    className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50"
-                  >
-                    Live demo
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
 
         <DataRequestSupport />
 
         <EmailReminderSection />
+        <PressSection />
       </main>
 
       {/* Footer section */}

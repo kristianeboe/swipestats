@@ -8,7 +8,12 @@ export default function debug(name: string) {
 export const logger =
   (debug: any) =>
   (m: string, ...args: any[]) => {
-    // TODO: If chrome console log, else debug
-    console.log(m, ...args);
-    debug(m, ...args);
+    // Detect Chrome
+    let chromeAgent =
+      typeof window !== 'undefined' && window?.navigator?.userAgent?.indexOf('Chrome') > -1;
+    if (chromeAgent) {
+      console.log(m, ...args);
+    } else {
+      debug(m, ...args);
+    }
   };

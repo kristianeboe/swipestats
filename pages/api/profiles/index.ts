@@ -100,7 +100,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<TinderProfilePr
         return;
       }
 
-      log('Fetched profile %s', result.tinderProfile.tinderId);
+      log('Created profile %s', result.tinderProfile.tinderId);
+      log('Created profile %O', Object.keys(result.tinderProfile));
       res.status(200).json(result.tinderProfile);
     }
 

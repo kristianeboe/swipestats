@@ -82,9 +82,18 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
   async function onAcceptedFileLoad(data: string) {
     // console.log('json data', data);
     setJsonProfile(JSON.parse(data));
-    const payload = await createSwipestatsProfilePayloadFromJson(data, selectedDataProvider.id);
-    setSwipestatsProfilePayload(payload);
-    console.log('Swipestats payload', payload);
+    try {
+      const payload = await createSwipestatsProfilePayloadFromJson(data, selectedDataProvider.id);
+      setSwipestatsProfilePayload(payload);
+      track('Profile Anonymised Successfully', {
+        providerId,
+      });
+    } catch (error) {
+      console.error(error);
+      track('Profile Anonymised Failed', {
+        providerId,
+      });
+    }
   }
 
   return (

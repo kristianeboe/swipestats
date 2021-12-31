@@ -7,6 +7,7 @@ import BugsnagPluginReact from '@bugsnag/plugin-react';
 import { useStorage, useLocalStorage } from '../../lib/hooks/useStorage';
 import { logger } from '../../lib/debug';
 import debug from '../../lib/debug';
+import { AnalyticsAction } from '../../interfaces/TrackingInterfaces';
 
 // const log = logger('tracking');
 const log = logger(debug('tracking'));
@@ -17,8 +18,6 @@ const BUGSNAG_API_KEY = process.env.NEXT_PUBLIC_BUGSNAG_API_KEY;
 
 const DEBUG = false;
 
-type ViewAction = 'View email reminder';
-type AnalyticsAction = 'Submit email reminder' | ViewAction | 'page_view';
 // intersection observer https://www.npmjs.com/package/react-intersection-observer
 
 interface TrackingAttributes {
@@ -67,15 +66,6 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
 
     if (DEBUG) return;
 
-    if (false && GA4_ID) {
-      const sendPageView = true;
-      gtag('config', GA4_ID, {
-        send_page_view: sendPageView,
-      });
-      if (sendPageView) {
-        log('Initial google pageview');
-      }
-    }
     if (MIXPANEL_ID) {
       mixpanel.init(MIXPANEL_ID, { debug: DEBUG, api_host: 'https://api-eu.mixpanel.com' });
     }
@@ -97,13 +87,23 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
         },
       });
     }
+    if (GA4_ID) {
+      const sendPageView = true;
+      gtag('config', GA4_ID, {
+        send_page_view: sendPageView,
+      });
+      if (sendPageView) {
+        log('track', 'page_view', window.location.pathname);
+        mixpanel.track('page_view');
+      }
+    }
   }
 
   function identify() {
-    log('identify');
     if (DEBUG || !profileId) return;
     // GA set user_props
     if (profileId) {
+      log('identify');
       mixpanel.identify(profileId);
     }
 
@@ -122,7 +122,7 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
   function pageview(path: string) {
     // log('pageview %s', path);
     if (DEBUG) return;
-    track('page_view_custom', {
+    track('page_view', {
       page_path: path,
     });
     // ga4Event('page_view', {
@@ -144,11 +144,9 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
   }, [profileId]);
 
   useEffect(() => {
-    console.log('router effect');
     router.events.on('routeChangeComplete', pageview);
     // no need for first pageview since google captures it
     // pageview(window.location.pathname); // first pageview
-    mixpanel.track('page_view');
 
     return () => {
       router.events.off('routeChangeComplete', pageview);

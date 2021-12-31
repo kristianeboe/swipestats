@@ -23,7 +23,6 @@ class MyDocument extends Document {
               __html: `window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-4RNKE7ZY73');
                     `,
             }}
           />

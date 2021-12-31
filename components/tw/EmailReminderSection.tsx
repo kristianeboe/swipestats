@@ -25,7 +25,7 @@ export function EmailReminderSection() {
   useEffect(() => {
     if (inView) {
       if (!viewed) {
-        track('View email reminder', {});
+        track('Email reminder Viewed', {});
       }
       setViewed(true);
     }
@@ -139,7 +139,7 @@ export function EmailReminderSection() {
 
                       if (email) {
                         setSubscribed(isoNow);
-                        track('Submit email reminder', {
+                        track('Email reminder Submitted', {
                           label: email,
                         });
                       }
@@ -158,7 +158,7 @@ export function EmailReminderSection() {
               <div
                 onClick={() => {
                   setSubscribed('');
-                  track('Reset email reminder', {});
+                  track('Email reminder Reset', {});
                 }}
                 className="block w-full rounded-md border border-transparent px-5 py-3 bg-gray-900 text-base font-medium text-white shadow text-center  sm:px-10 mt-12 sm:mx-auto sm:max-w-lg "
               >

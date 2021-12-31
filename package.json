@@ -3,10 +3,12 @@
   "private": true,
   "scripts": {
     "dev": "DEBUG=swipestats:* next dev",
+    "dev-local": "docker-compose up -d && next dev",
+    "db:local": "docker-compose up",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:reset": "npx prisma migrate reset",
+    "db:reset": "npx prisma migrate reset && npx prisma db push",
     "db:deploy": "npx prisma db push",
     "db:update": "npx prisma generate && npx prisma db push",
     "db:studio": "npx prisma studio"

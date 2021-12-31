@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 const log = logger(debug('upload'));
 
@@ -22,16 +22,17 @@ export function UploadArea({
 
       acceptedFiles.forEach((file: File) => {
         const reader = new FileReader();
+        track('File reading Initialized', {
+          providerId: 'tinder',
+        });
 
         reader.onabort = () => {
-          log('file reading was aborted');
-          track('File reading aborted', {
+          track('File reading Aborted', {
             providerId: 'tinder',
           });
         };
         reader.onerror = () => {
-          log('file reading has failed');
-          track('File reading failed', {
+          track('File reading Failed', {
             providerId: 'tinder',
           });
         };
@@ -39,8 +40,7 @@ export function UploadArea({
           // Do whatever you want with the file contents
           // const binaryStr = reader.result;
           // console.log(binaryStr);
-          log('file reading has succeded');
-          track('File reading succeeded', {
+          track('File reading Succeeded', {
             providerId: 'tinder',
           });
           onAcceptedFileLoad(reader.result as string);
@@ -58,6 +58,16 @@ export function UploadArea({
     accept: '.json',
     validator: () => null, // can maybe validate already here? Probably need to do it later
   });
+
+  useEffect(() => {
+    if (fileRejections.length) {
+      console.log('fileRejections effect', fileRejections.length);
+      track('File reading Rejected', {
+        event_category: 'Upload',
+        providerId: 'tinder',
+      });
+    }
+  }, [fileRejections.length]);
 
   // https://css-tricks.com/drag-and-drop-file-uploading/
   // https://css-tricks.com/examples/DragAndDropFileUploading/

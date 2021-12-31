@@ -32,8 +32,8 @@ model TinderProfile {
   region              String?
   instagram           Boolean
   spotify             Boolean
-  jobs                Json // title, company
-  schools             Json // displayed, name
+  jobs                Json? // title, company
+  schools             Json? // displayed, name
   user_interests      String[] // Should probably be enum
   sexual_orientations String[] // Should probably be enum
 
