@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import mixpanel, { track } from 'mixpanel-browser';
 import Bugsnag from '@bugsnag/js';
 import BugsnagPluginReact from '@bugsnag/plugin-react';
+import splitbee from '@splitbee/web';
 
 import { useStorage, useLocalStorage } from '../../lib/hooks/useStorage';
 import { logger } from '../../lib/debug';
@@ -15,6 +16,7 @@ const log = logger(debug('tracking'));
 export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
 const MIXPANEL_ID = process.env.NEXT_PUBLIC_MIXPANEL_ID;
 const BUGSNAG_API_KEY = process.env.NEXT_PUBLIC_BUGSNAG_API_KEY;
+const SPLITBEE_TOKEN = process.env.NEXT_PUBLIC_SPLITBEE_TOKEN;
 
 const DEBUG = false;
 
@@ -43,8 +45,15 @@ export const ga4Event = (
   });
 };
 
+interface AnalyticsSDK {
+  [category: string]: {
+    [action: string]: (attrs: { [key: string]: any }) => void;
+  };
+}
+
 interface ITrackingContext {
   track: (action: AnalyticsAction, attributes: TrackingAttributes) => void;
+  analyticsSDK: AnalyticsSDK;
 }
 const TrackingContext = React.createContext<ITrackingContext | null>(null);
 
@@ -62,12 +71,28 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
       ga4Id: GA4_ID,
       mixpanelId: MIXPANEL_ID,
       bugsnagApiKey: BUGSNAG_API_KEY,
+      splitbeeToken: SPLITBEE_TOKEN,
+    });
+    console.log('initialize analytics', {
+      ga4Id: GA4_ID,
+      mixpanelId: MIXPANEL_ID,
+      bugsnagApiKey: BUGSNAG_API_KEY,
+      splitbeeToken: SPLITBEE_TOKEN,
     });
 
     if (DEBUG) return;
 
     if (MIXPANEL_ID) {
       mixpanel.init(MIXPANEL_ID, { debug: DEBUG, api_host: 'https://api-eu.mixpanel.com' });
+    }
+    if (SPLITBEE_TOKEN) {
+      splitbee.init({
+        token: SPLITBEE_TOKEN,
+        // Enable cookie-less mode. Defaults to `false`
+        disableCookie: true,
+        scriptUrl: '/bee.js',
+        apiUrl: '/_hive',
+      });
     }
     if (BUGSNAG_API_KEY) {
       Bugsnag.start({
@@ -105,6 +130,9 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     if (profileId) {
       log('identify');
       mixpanel.identify(profileId);
+      splitbee.user.set({
+        profileId,
+      });
     }
 
     gtag('set', 'user_properties', {
@@ -117,6 +145,7 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     gtag('set', 'user_properties', {
       user_id: '',
     });
+    splitbee.reset();
   }
 
   function pageview(path: string) {
@@ -153,7 +182,15 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     };
   }, [router.events]);
 
-  function track(action: AnalyticsAction, attributes: TrackingAttributes) {
+  function track(
+    action: AnalyticsAction,
+    attributes: TrackingAttributes,
+    options = {
+      mixpanel: true,
+      ga4: true,
+      splitbee: true,
+    }
+  ) {
     const attrs = {
       page_path: router.pathname,
       ...attributes,
@@ -161,17 +198,28 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     log('track %s %O', action, attrs);
     if (DEBUG) return;
     // mixpane
-    mixpanel.track(action, attrs);
-    if (action !== 'page_view_custom') {
-      ga4Event(action, attrs);
+    if (options.mixpanel) mixpanel.track(action, attrs);
+    if (options.ga4) ga4Event(action, attrs);
+
+    if (options.splitbee && action !== 'page_view') {
+      splitbee.track(action, attrs);
     }
-    // ga4
   }
+
+  const analyticsSDK: AnalyticsSDK = {
+    profile: {
+      created: (attrs) =>
+        track('Profile Created', {
+          tinderId: attrs.tinderId,
+        }),
+    },
+  };
 
   return (
     <TrackingContext.Provider
       value={{
         track,
+        analyticsSDK,
       }}
       {...props}
     />

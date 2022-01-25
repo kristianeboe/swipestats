@@ -135,6 +135,7 @@ export function EmailReminderSection() {
                     onClick={() => {
                       const isoNow = new Date().toISOString();
                       // setItem(subscribeKey, isoNow);
+                      // @ts-ignore
                       const email = document.getElementById('mce-EMAIL')?.value;
 
                       if (email) {

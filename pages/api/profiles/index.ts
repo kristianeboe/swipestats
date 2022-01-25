@@ -22,12 +22,15 @@ export type TinderProfilePrisma = Prisma.TinderProfileGetPayload<{
 
 async function handler(req: NextApiRequest, res: NextApiResponse<TinderProfilePrisma>) {
   log(req.method || '');
+  const gaClientId = req.headers['X-GA-CLIENT-ID'] as string;
+  log(gaClientId || '');
   const tinderId = req.body.tinderId ?? req.query.tinderId;
   const existingTinderProfile = await prisma.tinderProfile.findUnique({
     where: {
       tinderId: tinderId,
     },
   });
+
   log('Existing profile found ' + !!existingTinderProfile);
 
   // const user = await prisma.user.findUnique()

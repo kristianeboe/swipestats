@@ -21,6 +21,7 @@ import { useTracking } from '../../components/providers/TrackingProvider';
 import { createSwipestatsProfilePayloadFromJson } from '../../lib/extractAnonymizedData';
 import { SwipestatsProfile } from '../../interfaces/SwipestatsProfile';
 import { SwipestatsProfilePayload } from '../api/profiles';
+import testData from '../../fixtures/kristian-data.json';
 
 export type ProviderId = 'tinder' | 'hinge' | 'bumble';
 interface DataProvider {
@@ -200,6 +201,11 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
               ) : (
                 <>
                   <UploadArea onAcceptedFileLoad={onAcceptedFileLoad} />
+                  <div className="flex">
+                    <button onClick={() => onAcceptedFileLoad(JSON.stringify(testData))}>
+                      Use test file
+                    </button>
+                  </div>
                 </>
               )}
               {/* <div>

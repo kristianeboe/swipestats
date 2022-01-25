@@ -3,6 +3,7 @@ import React, { forwardRef } from 'react';
 import { classNames } from '../../lib/utils';
 
 const buttonCategories = {
+  // shadow-rose-500/50
   primary:
     'block w-full rounded-md border border-transparent px-5 py-3 bg-rose-500 text-base font-medium text-white shadow hover:bg-rose-600 disabled:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 sm:px-10',
   secondary:

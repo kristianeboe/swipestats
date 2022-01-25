@@ -4,6 +4,7 @@ import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import { TrackingProvider } from '../components/providers/TrackingProvider';
 import React, { useEffect } from 'react';
 import debug, { logger } from '../lib/debug';
+import { ApiProvider } from '../components/providers/ApiProvider';
 
 const log = logger(debug('app'));
 
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <TrackingProvider>
-      <Component {...pageProps} />
+      <ApiProvider>
+        <Component {...pageProps} />
+      </ApiProvider>
     </TrackingProvider>
   );
 }

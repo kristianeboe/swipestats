@@ -9,6 +9,7 @@ import { UploadProfileCard } from './UploadProfileCard';
 import { Button } from '../components/tw/Button';
 import { useTracking } from './providers/TrackingProvider';
 import { TinderProfilePrisma } from '../pages/api/profiles/index';
+import { useSwipestatsApi } from './providers/ApiProvider';
 
 const log = logger(debug('upload-cta'));
 export function UploadCTA(props: {
@@ -16,8 +17,9 @@ export function UploadCTA(props: {
   jsonProfile: FullTinderDataJSON;
 }) {
   const router = useRouter();
-  const { track } = useTracking();
+  const { track, analyticsSDK } = useTracking();
   const [loading, setLoading] = useState(false);
+  const swipestatsSDK = useSwipestatsApi();
 
   async function createProfile() {
     setLoading(true);
@@ -26,19 +28,21 @@ export function UploadCTA(props: {
       track('Profile Upload Initialized', {
         providerId: 'tinder',
       });
-      await ky
-        .post('/api/profiles', {
-          json: props.swipestatsProfilePayload,
-          timeout: false,
-        })
-        .json<TinderProfilePrisma>()
-        .then((tinderProfile) => {
-          log('Tinder profile created API Return %O', tinderProfile);
-          track('Profile Created', {
-            tinderId: tinderProfile.tinderId,
-          });
-          router.push('/insights/?id=' + tinderProfile.tinderId);
-        });
+      const tinderProfile = await swipestatsSDK.profile.create(props.swipestatsProfilePayload);
+      log('Tinder profile created API Return %O', tinderProfile);
+      analyticsSDK.profile.created({ tinderId: tinderProfile.tinderId });
+      router.push('/insights/?id=' + tinderProfile.tinderId);
+      // await ky
+      //   .post('/api/profiles', {
+      //     json: props.swipestatsProfilePayload,
+      //     timeout: false,
+      //   })
+      //   .json<TinderProfilePrisma>()
+      //   .then((tinderProfile) => {
+      //     log('Tinder profile created API Return %O', tinderProfile);
+      //     analyticsSDK.profile.created({ tinderId: tinderProfile.tinderId });
+      //     router.push('/insights/?id=' + tinderProfile.tinderId);
+      //   });
     } catch (error) {
       setLoading(false);
       console.error(error);

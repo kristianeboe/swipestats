@@ -1,5 +1,5 @@
-import { FullTinderDataJSON } from '../interfaces/FullTinderDataJSON';
 import Link from 'next/link';
+import { FullTinderDataJSON } from '../interfaces/TinderDataJSON';
 import { SwipestatsProfilePayload } from '../pages/api/profiles';
 
 function getAgeFromBirthdate(birthDate: Date, birthDateString?: string) {

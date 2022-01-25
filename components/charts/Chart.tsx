@@ -47,6 +47,7 @@ export function Chart(props: {
 
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
+      // @ts-ignore
       const newChartInstance = new Chartjs(chartContainer.current, chartConfig);
       setChartInstance(newChartInstance);
     }

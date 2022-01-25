@@ -1,5 +1,4 @@
 import { Chart } from '../../components/charts/Chart';
-import { LineChart } from '../../components/charts/LineChart';
 import KristianData from '../../fixtures/kristian-data.json';
 import DeepaData from '../../fixtures/deepa-data.json';
 import { FullTinderDataJSON } from '../../interfaces/TinderDataJSON';
@@ -128,11 +127,11 @@ export default function InsightsPage() {
     profiles.map((p) => {
       const baseColor = randomRGB();
       const birthDate = new Date(p.birthDate).toISOString();
-      const aggregateDataForKey = aggregateDataPrMonthForChart(p[key]);
+      const aggregateDataForKey = aggregateDataPrMonthForChart(p[key] as DateValueMap);
 
       return {
         key: key,
-        label: p.tinderId,
+        label: p.tinderId as string,
         borderColor: birthDate ? hashStringToColor(birthDate) : randomRGB(), // 'rgb(255, 99, 132)',
         backgroundColor: birthDate ? hashStringToColor(birthDate, 0.5) : randomRGB(0.5), // 'rgb(255, 99, 132, 0.5)',
         data: aggregateDataForKey,
@@ -228,12 +227,7 @@ export default function InsightsPage() {
             <div className="w-full sm:max-w-lg h-96" key={i}>
               <div className="bg-white overflow-hidden shadow sm:rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
-                  {/* Content goes here */}
-                  {/* <LineChart title="test" datasets={[matchesDataset]} /> */}
-
                   <Chart title={chartTitle} datasets={ds} />
-
-                  {/* <Chart title="App opens" datasets={[matchesDataset]} /> */}
                 </div>
               </div>
             </div>
