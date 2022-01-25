@@ -1,6 +1,6 @@
 import { Chart } from '../../components/charts/Chart';
-import KristianData from '../../fixtures/kristian-data.json';
-import DeepaData from '../../fixtures/deepa-data.json';
+// import KristianData from '../../fixtures/kristian-data.json';
+// import DeepaData from '../../fixtures/deepa-data.json';
 import { FullTinderDataJSON } from '../../interfaces/TinderDataJSON';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -62,8 +62,8 @@ function randomRGB(opacity: number = 1) {
 
 export default function InsightsPage() {
   // @ts-ignore
-  const testData: FullTinderDataJSON = KristianData;
-  const data = testData;
+  // const testData: FullTinderDataJSON = KristianData;
+  // const data = testData;
   // const usageChartKeys = [
   //   'matches',
   //   'app_opens',
@@ -92,7 +92,9 @@ export default function InsightsPage() {
       ky.get('/api/profiles?tinderId=' + initialId)
         .json<TinderProfilePrisma>()
         .then((tp) => {
-          setProfiles([tp]);
+          if (tp) {
+            setProfiles([tp]);
+          }
         })
         .catch((e) => {
           setErrors([e]);
@@ -100,21 +102,21 @@ export default function InsightsPage() {
     }
   }, [initialId]);
 
-  const matches = testData.Usage.matches;
+  // const matches = data.Usage.matches;
 
-  const matchesDataset = {
-    label: 'Kristian',
-    borderColor: 'rgb(255, 99, 132)',
-    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    data: aggregateDataPrMonthForChart(matches),
-  };
+  // const matchesDataset = {
+  //   label: 'Kristian',
+  //   borderColor: 'rgb(255, 99, 132)',
+  //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
+  //   data: aggregateDataPrMonthForChart(matches),
+  // };
 
-  const deepaDataset = {
-    label: 'Deepa',
-    data: aggregateDataPrMonthForChart(DeepaData.Usage.matches), //labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-    borderColor: 'rgb(53, 162, 235)',
-    backgroundColor: 'rgba(53, 162, 235, 0.5)',
-  };
+  // const deepaDataset = {
+  //   label: 'Deepa',
+  //   data: aggregateDataPrMonthForChart(DeepaData.Usage.matches), //labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
+  //   borderColor: 'rgb(53, 162, 235)',
+  //   backgroundColor: 'rgba(53, 162, 235, 0.5)',
+  // };
 
   profiles.map((p) => {
     log('loaded profile %O', {
