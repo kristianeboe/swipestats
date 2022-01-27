@@ -292,7 +292,10 @@ export default function HomePage() {
                     </a>
                   </Link>
 
-                  <Link href="/insights/" passHref={true}>
+                  <Link
+                    href="/insights/?profileId=96d5e7ba8f42af5f40b1ea25a3deafc035ebd5350521b925a5e6478e2aebfee5"
+                    passHref={true}
+                  >
                     <a className="ml-3 ">
                       <Button content="Live Demo" category="secondary" />
                     </a>
@@ -468,20 +471,23 @@ export default function HomePage() {
             </h2>
             <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
               <div className="inline-flex rounded-md shadow">
-                <a
-                  href="#"
-                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700"
-                >
-                  Get started
-                </a>
+                <Link href={'/upload/tinder?from=index-cta'} passHref>
+                  <a className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700">
+                    Get started
+                  </a>
+                </Link>
               </div>
               <div className="ml-3 inline-flex rounded-md shadow">
-                <a
-                  href="#"
-                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50"
+                <Link
+                  href={
+                    '/insights/?profileId=96d5e7ba8f42af5f40b1ea25a3deafc035ebd5350521b925a5e6478e2aebfee5&demo=true'
+                  }
+                  passHref
                 >
-                  Live demo
-                </a>
+                  <a className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-rose-600 bg-white hover:bg-rose-50">
+                    Live demo
+                  </a>
+                </Link>
               </div>
             </div>
           </div>

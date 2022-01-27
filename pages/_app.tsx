@@ -5,7 +5,7 @@ import { TrackingProvider } from '../components/providers/TrackingProvider';
 import React, { useEffect } from 'react';
 import debug, { logger } from '../lib/debug';
 import { ApiProvider } from '../components/providers/ApiProvider';
-
+import { Toaster } from 'react-hot-toast';
 const log = logger(debug('app'));
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -20,6 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <TrackingProvider>
       <ApiProvider>
         <Component {...pageProps} />
+        <Toaster />
       </ApiProvider>
     </TrackingProvider>
   );

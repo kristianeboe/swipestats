@@ -57,23 +57,23 @@ const dataProviders: DataProvider[] = [
 
 // }
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { provider } = context.query;
+  const queryProviderId = context.query.provider as string;
 
   return {
     props: {
-      providerId: provider,
+      queryProviderId,
     },
   };
 };
 
-export default function UploadPage({ providerId }: { providerId: ProviderId }) {
+export default function UploadPage({ queryProviderId }: { queryProviderId: ProviderId }) {
   //   const { provider: providerId } = router.query;
   const [jsonProfile, setJsonProfile] = useState<FullTinderDataJSON | null>(null);
   const [swipestatsProfilePayload, setSwipestatsProfilePayload] =
     useState<SwipestatsProfilePayload | null>(null);
   const { track } = useTracking();
 
-  const routerProvider = dataProviders.find((p) => p.id === providerId);
+  const routerProvider = dataProviders.find((p) => p.id === queryProviderId);
   const [selectedDataProvider, setDataProvider] = useState(routerProvider ?? dataProviders[0]);
 
   if (routerProvider && routerProvider.id !== selectedDataProvider.id) {
@@ -87,12 +87,12 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
       const payload = await createSwipestatsProfilePayloadFromJson(data, selectedDataProvider.id);
       setSwipestatsProfilePayload(payload);
       track('Profile Anonymised Successfully', {
-        providerId,
+        providerId: selectedDataProvider.id,
       });
     } catch (error) {
       console.error(error);
       track('Profile Anonymised Failed', {
-        providerId,
+        providerId: selectedDataProvider.id,
       });
     }
   }
@@ -202,7 +202,10 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
                 <>
                   <UploadArea onAcceptedFileLoad={onAcceptedFileLoad} />
                   {/* <div className="flex">
-                    <button onClick={() => onAcceptedFileLoad(JSON.stringify(testData))}>
+                    <button onClick={() => {
+                      const payload = await createSwipestatsProfilePayloadFromJson(JSON.stringify(testData), selectedDataProvider.id);
+      setSwipestatsProfilePayload(payload);
+                    } }>
                       Use test file
                     </button>
                   </div> */}
@@ -227,11 +230,11 @@ export default function UploadPage({ providerId }: { providerId: ProviderId }) {
 
 export function WaitlistCTA({ dataProvider }: { dataProvider: DataProvider }) {
   const [email, setEmail] = useState('');
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formStatus, setFormStatus] = useState<'' | 'success' | 'error'>('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setFormSubmitted(false);
+    setFormStatus('');
   }, [dataProvider]);
 
   async function addEmailToWaitlist(e: any) {
@@ -241,12 +244,17 @@ export function WaitlistCTA({ dataProvider }: { dataProvider: DataProvider }) {
       .post('/api/waitlist', {
         json: {
           email,
-          dataProvider: dataProvider.title,
+          dataProvider: dataProvider.id,
         },
       })
-      .catch((e) => console.error(e));
+      .then((res) => {
+        setFormStatus('success');
+      })
+      .catch((e) => {
+        console.error(e);
+        setFormStatus('error');
+      });
 
-    setFormSubmitted(true);
     setLoading(false);
   }
 
@@ -263,18 +271,22 @@ export function WaitlistCTA({ dataProvider }: { dataProvider: DataProvider }) {
             </p>
           </div>
           <div className="mt-12 sm:w-full sm:max-w-md lg:mt-0 lg:ml-8 lg:flex-1">
-            {formSubmitted ? (
-              // <p className="text-rose-100">Email saved</p>
-              <div className="rounded-md bg-green-50 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-green-800">Subscribed 🎉</p>
+            {formStatus ? (
+              formStatus === 'error' ? (
+                <div> Error</div>
+              ) : (
+                // <p className="text-rose-100">Email saved</p>
+                <div className="rounded-md bg-green-50 p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-green-800">Subscribed 🎉</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )
             ) : (
               <form className="sm:flex" onSubmit={addEmailToWaitlist}>
                 <label htmlFor="email-address" className="sr-only">

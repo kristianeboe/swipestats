@@ -1,13 +1,7 @@
 import Link from 'next/link';
 import { FullTinderDataJSON } from '../interfaces/TinderDataJSON';
+import { getAgeFromBirthdate } from '../lib/utils';
 import { SwipestatsProfilePayload } from '../pages/api/profiles';
-
-function getAgeFromBirthdate(birthDate: Date, birthDateString?: string) {
-  // const birthDate = new Date(birthDateString);
-  const ageDifMs = Date.now() - birthDate.getTime();
-  const ageDate = new Date(ageDifMs); // miliseconds from epoch
-  return Math.abs(ageDate.getUTCFullYear() - 1970);
-}
 
 export function UploadProfileCard({
   dataJSON,

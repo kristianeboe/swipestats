@@ -45,6 +45,8 @@ export function Chart(props: {
     options,
   };
 
+  console.log('chart', props.title, props);
+
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
       // @ts-ignore

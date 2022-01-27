@@ -3,9 +3,16 @@
 
 generator client {
   provider = "prisma-client-js"
+  // mysql
+  // previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
+  // mysql
+  // provider             = "mysql"
+  // url                  = env("PLANETSCALE_URL_LOCAL")
+  // shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  // referentialIntegrity = "prisma"
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
@@ -34,8 +41,9 @@ model TinderProfile {
   spotify             Boolean
   jobs                Json? // title, company
   schools             Json? // displayed, name
-  user_interests      String[] // Should probably be enum
-  sexual_orientations String[] // Should probably be enum
+  user_interests      Json? // Should probably be enum
+  sexual_orientations Json? // Should probably be enum
+
 
   // usage
   appOpens         Json

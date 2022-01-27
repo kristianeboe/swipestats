@@ -31,7 +31,7 @@ export function UploadCTA(props: {
       const tinderProfile = await swipestatsSDK.profile.create(props.swipestatsProfilePayload);
       log('Tinder profile created API Return %O', tinderProfile);
       analyticsSDK.profile.created({ tinderId: tinderProfile.tinderId });
-      router.push('/insights/?id=' + tinderProfile.tinderId);
+      router.push('/insights/?profileId=' + tinderProfile.tinderId);
       // await ky
       //   .post('/api/profiles', {
       //     json: props.swipestatsProfilePayload,
