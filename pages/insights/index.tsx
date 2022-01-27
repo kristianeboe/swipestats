@@ -12,6 +12,7 @@ import debug, { logger } from '../../lib/debug';
 import { GetServerSideProps } from 'next';
 import toast from 'react-hot-toast';
 import { getAgeFromBirthdate, getLabelForTinderProfile } from '../../lib/utils';
+import Head from 'next/head';
 const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
@@ -160,6 +161,22 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
 
   return (
     <div className="max-w-7xl mx-auto">
+      <Head>
+        <title>Get insights about your dating data | Swipestats</title>
+        <meta
+          name="description"
+          content={`Upload your dating data anonymously and compare it to demographics from around the world!`}
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={'https://swipestats.io/insights/'} />
+        <meta property="og:title" content="Swipestats | Visualize your Tinder data" />
+        <meta
+          property="og:description"
+          content="Upload your dating data anonymously and compare it to demographics from around the world!"
+        />
+        <meta property="og:image" content="/ss2.png" />
+      </Head>
       <div className="pt-24 container mx-auto">
         <h1 className="text-center text-6xl font-black">Insights</h1>
         <div className="md:flex md:items-center m-6">

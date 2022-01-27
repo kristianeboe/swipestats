@@ -251,7 +251,31 @@ export default function HomePage() {
       {!dismissed && <HeaderBanner />}
 
       <Head>
-        <title>Swipestats</title>
+        <title>Swipestats | Visualize your Tinder data</title>
+        <meta name="title" content="Swipestats | Visualize your Tinder data" />
+        <meta
+          name="description"
+          content="Upload your dating data anonymously and compare it to demographics from around the world!"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://swipestats.io/" />
+        <meta property="og:title" content="Swipestats | Visualize your Tinder data" />
+        <meta
+          property="og:description"
+          content="Upload your dating data anonymously and compare it to demographics from around the world!"
+        />
+        <meta property="og:image" content="/ss2.png" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://swipestats.io/" />
+        <meta property="twitter:title" content="Swipestats | Visualize your Tinder data" />
+        <meta
+          property="twitter:description"
+          content="Upload your dating data anonymously and compare it to demographics from around the world!"
+        />
+        <meta property="twitter:image" content="/ss2.png" />
+
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

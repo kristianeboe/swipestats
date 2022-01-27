@@ -100,7 +100,23 @@ export default function UploadPage({ queryProviderId }: { queryProviderId: Provi
   return (
     <div>
       <Head>
-        <title>Upload your {selectedDataProvider.title} data</title>
+        <title>Upload your {selectedDataProvider.title} data | Swipestats</title>
+        <meta
+          name="description"
+          content={`Upload your ${selectedDataProvider.title} data anonymously and compare it to demographics from around the world!`}
+        />
+
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content={'https://swipestats.io/upload/' + selectedDataProvider.id}
+        />
+        <meta property="og:title" content="Swipestats | Visualize your Tinder data" />
+        <meta
+          property="og:description"
+          content="Upload your dating data anonymously and compare it to demographics from around the world!"
+        />
+        <meta property="og:image" content="/ss2.png" />
       </Head>
       <div className="min-h-screen">
         {/* <Navbar simple={true} /> */}
