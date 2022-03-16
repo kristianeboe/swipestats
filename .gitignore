@@ -40,3 +40,6 @@ yarn-error.log*
 /fixtures
 # Sentry
 .sentryclirc
+
+
+old_swipestats_profiles
