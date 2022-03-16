@@ -63,7 +63,7 @@ model TinderProfile {
   userId           Int         @unique
   user             User        @relation(fields: [userId], references: [id])
 
-  custdomDataId String      @unique // same as tinderId
+  custdomDataId String?     @unique // same as tinderId
   customData    CustomData? @relation(fields: [custdomDataId], references: [id])
 }
 

@@ -17,6 +17,7 @@ const buttonCategories = {
 export function Button({
   type = 'button',
   category = 'primary',
+  loading,
   ...props
 }: {
   type?: 'submit' | 'button';
@@ -36,11 +37,11 @@ export function Button({
         buttonCategories[category],
         props.className || ''
       )}
-      disabled={props.loading || props.disabled}
+      disabled={loading || props.disabled}
       onClick={props.onClick}
       {...props}
     >
-      {props.loading ? (
+      {loading ? (
         <svg
           width="20"
           height="20"

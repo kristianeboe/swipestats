@@ -5,6 +5,7 @@ import { AnonymizedTinderDataJSON } from '../../../interfaces/TinderDataJSON';
 import { SwipestatsProfile } from '../../../interfaces/SwipestatsProfile';
 import { Prisma } from '@prisma/client';
 import debug, { logger } from '../../../lib/debug';
+import { getMessagesMeta } from '../../../lib/serverLib/getMessagesMeta';
 const log = logger(debug('/profiles'));
 
 // https://vercel.com/guides/nextjs-prisma-postgres
@@ -45,7 +46,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<TinderProfilePr
     if (!existingTinderProfile) {
       // only considers tinder data for now
 
-      // const originalFile = prisma.originalAnonymizedFile.create({
+      // const tinderJson = prisma.originaltinderJson.create({
       //   data: {
       //     dataProvider: 'TINDER',
       //     file: body.anonymizedTinderJson,
@@ -53,45 +54,54 @@ async function handler(req: NextApiRequest, res: NextApiResponse<TinderProfilePr
       // });
 
       // const tinderProfile = body.swipestatsProfile.tinderProfile;
-      const originalFile = body.anonymizedTinderJson;
-      const usage = originalFile.Usage;
+      const tinderJson = body.anonymizedTinderJson;
+      const usage = tinderJson.Usage;
+
+      const messagesMeta = getMessagesMeta(tinderJson.Messages);
       log('Initiate prisma create');
-      const result = await prisma.user.create({
-        data: {
-          // user: // is auto initialized
-          tinderProfile: {
-            create: {
-              tinderId: tinderId,
-              birthDate: originalFile.User.birth_date,
-              createDate: originalFile.User.create_date,
-              gender: originalFile.User.gender,
-              bio: originalFile.User.bio,
-              city: originalFile.User.city?.name,
-              region: originalFile.User.city?.region,
-              instagram: originalFile.User.instagram,
-              spotify: originalFile.User.spotify,
-              jobs: originalFile.User.jobs as unknown as Prisma.JsonArray,
-              schools: originalFile.User.schools as unknown as Prisma.JsonArray,
-              user_interests: originalFile.User.user_interests,
-              sexual_orientations: originalFile.User.sexual_orientations, // Should probably be enum
-              appOpens: usage.app_opens as Prisma.JsonObject,
-              matches: usage.matches as Prisma.JsonObject,
-              swipeLikes: usage.swipes_likes as Prisma.JsonObject,
-              swipePasses: usage.swipes_passes as Prisma.JsonObject,
-              messagesSent: usage.messages_sent as Prisma.JsonObject,
-              messagesReceived: usage.messages_received as Prisma.JsonObject,
-              messagesMeta: {
-                messages: [] as Prisma.JsonArray,
-              } as Prisma.JsonObject,
-            },
-          },
-          dataFiles: {
-            create: {
-              dataProvider: 'TINDER',
-              file: originalFile as unknown as Prisma.JsonObject,
+      const createObj: Prisma.UserCreateInput = {
+        // user: // is auto initialized
+        tinderProfile: {
+          create: {
+            tinderId: tinderId,
+            birthDate: tinderJson.User.birth_date,
+            createDate: tinderJson.User.create_date,
+            gender: tinderJson.User.gender,
+            bio: tinderJson.User.bio,
+            city: tinderJson.User.city?.name,
+            region: tinderJson.User.city?.region,
+            instagram: tinderJson.User.instagram,
+            spotify: tinderJson.User.spotify,
+            jobs: tinderJson.User.jobs as unknown as Prisma.JsonArray,
+            schools: tinderJson.User.schools as unknown as Prisma.JsonArray,
+            user_interests: tinderJson.User.user_interests,
+            sexual_orientations: tinderJson.User.sexual_orientations, // Should probably be enum
+            appOpens: usage.app_opens as Prisma.JsonObject,
+            matches: usage.matches as Prisma.JsonObject,
+            swipeLikes: usage.swipes_likes as Prisma.JsonObject,
+            swipePasses: usage.swipes_passes as Prisma.JsonObject,
+            messagesSent: usage.messages_sent as Prisma.JsonObject,
+            messagesReceived: usage.messages_received as Prisma.JsonObject,
+
+            messagesMeta,
+            messagesRaw: {
+              create: {
+                id: tinderId,
+                messages: tinderJson.Messages as unknown as Prisma.JsonArray,
+              },
             },
           },
         },
+        dataFiles: {
+          create: {
+            dataProvider: 'TINDER',
+            file: tinderJson as unknown as Prisma.JsonObject,
+          },
+        },
+      };
+
+      const result = await prisma.user.create({
+        data: createObj,
         include: {
           tinderProfile: true,
           dataFiles: true,
@@ -99,14 +109,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<TinderProfilePr
       });
 
       if (!result.tinderProfile) {
-        // throw new Error('404')
-        res.status(404).end();
+        throw new Error('500');
         return;
       }
 
       log('Created profile %s', result.tinderProfile.tinderId);
       log('Created profile %O', Object.keys(result.tinderProfile));
       res.status(200).json(result.tinderProfile);
+      return;
     }
 
     if (!existingTinderProfile) {

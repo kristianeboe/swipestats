@@ -253,7 +253,7 @@ export interface Spotify {
 export interface Message {
   to: number; // match id - 1
   from: string; // "You"
-  message: string; // should maybe clean this from HTML to string. Lot's of "don&rsquo;t"
+  message: string; // should maybe clean this from HTML to string. Lot's of "don&rsquo;t" // new Date() actually works well to parse it
   sent_date: string; // not iso string, but close "Tue, 30 Nov 2021 05:08:21 GMT"
   type?: string; // "gif"
   fixed_height?: string; // url (to gif)
