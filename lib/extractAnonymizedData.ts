@@ -37,6 +37,7 @@ export async function createSwipestatsProfilePayloadFromJson(
         const tinderJson: FullTinderDataJSON = JSON.parse(jsonString);
         log('Tinder data parsed successfully');
         const anonymizedTinderJson: AnonymizedTinderDataJSON = {
+          // including messages
           ...tinderJson,
           User: {
             ...omitMultipleKeys(tinderJson.User)(

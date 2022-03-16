@@ -38,6 +38,7 @@ export function Button({
       )}
       disabled={props.loading || props.disabled}
       onClick={props.onClick}
+      {...props}
     >
       {props.loading ? (
         <svg

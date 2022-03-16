@@ -28,6 +28,7 @@
     "date-fns": "^2.27.0",
     "debug": "^4.3.3",
     "js-cookie": "^3.0.1",
+    "JSONStream": "^1.3.5",
     "ky": "^0.28.7",
     "ky-universal": "^0.9.1",
     "mixpanel": "^0.14.0",

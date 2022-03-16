@@ -94,6 +94,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<TinderProfilePr
         },
         include: {
           tinderProfile: true,
+          dataFiles: true,
         },
       });
 
