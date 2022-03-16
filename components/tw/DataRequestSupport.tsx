@@ -6,21 +6,21 @@ const supportLinks = [
     name: 'Tinder',
     href: 'https://www.help.tinder.com/hc/en-us/articles/115005626726-How-do-I-request-a-copy-of-my-personal-data-',
     description:
-      'Varius facilisi mauris sed sit. Non sed et duis dui leo, vulputate id malesuada non. Cras aliquet purus dui laoreet diam sed lacus, fames.',
+      'Easy! Follow the instructions to request the data, wait 1-3 days and receive a link to download your personal tinder.json. Then come back here!',
     icon: PhoneIcon,
   },
   {
     name: 'Bumble',
     href: 'https://bumble.com/en/help/how-can-i-request-my-data-or-retrieve-past-conversations',
     description:
-      'Varius facilisi mauris sed sit. Non sed et duis dui leo, vulputate id malesuada non. Cras aliquet purus dui laoreet diam sed lacus, fames.',
+      'This process is a bit more manual and time consuming. After you submit your data request it can take up to 30 days before you get a reply.',
     icon: SupportIcon,
   },
   {
     name: 'Hinge',
     href: 'https://hingeapp.zendesk.com/hc/en-us/articles/360004792234-Data-Requests',
     description:
-      'Varius facilisi mauris sed sit. Non sed et duis dui leo, vulputate id malesuada non. Cras aliquet purus dui laoreet diam sed lacus, fames.',
+      'In Hinge you start the data request inside the app. All the steps are outlined in their help article linked here.',
     icon: NewspaperIcon,
   },
 ];
@@ -55,7 +55,7 @@ export default function DataRequestSupport() {
         aria-labelledby="contact-heading"
       >
         <h2 className="sr-only" id="contact-heading">
-          Contact us
+          How to request your data
         </h2>
         <div className="grid grid-cols-1 gap-y-20 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-8">
           {supportLinks.map((link) => (
@@ -72,7 +72,7 @@ export default function DataRequestSupport() {
                   href={link.href}
                   className="text-base font-medium text-rose-700 hover:text-rose-600"
                 >
-                  Contact us<span aria-hidden="true"> &rarr;</span>
+                  Start here<span aria-hidden="true"> &rarr;</span>
                 </a>
               </div>
             </div>

@@ -17,6 +17,7 @@ export function UploadProfileCard({
   <pre>{Object.keys(dataJSON).join(', ')}</pre>;
   const { Messages, Usage, ...json } = dataJSON;
 
+  const isMale = userData.gender === 'M';
   const debug = false;
 
   return (
@@ -30,16 +31,18 @@ export function UploadProfileCard({
         <div className="group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500 overflow-hidden">
           <img
             src={
-              'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80'
+              isMale
+                ? '/images/svgs/undraw_male_avatar.svg' //  require('/assets/imgs/undraw_male_avatar.svg') //  '/assets/imgs/undraw_male_avatar.svg'
+                : '/images/svgs/undraw_female_avatar.svg' // require('/assets/imgs/undraw_female_avatar.svg') // '/assets/imgs/undraw_female_avatar.svg' //  'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80'
             }
             alt=""
-            className="object-cover pointer-events-none  h-40 w-full"
+            className="object-cover pointer-events-none  h-40 w-full px-40 "
           />
         </div>
         <div className="px-6 py-4">
           <div className="flex items-baseline">
             <div className="font-bold text-xl">
-              {`${userData.gender === 'M' ? 'Male' : 'Female'}, ${getAgeFromBirthdate(
+              {`${isMale ? 'Male' : 'Female'}, ${getAgeFromBirthdate(
                 new Date(userData.birth_date)
               )}`}
             </div>
@@ -64,7 +67,7 @@ export function UploadProfileCard({
 
           <br />
           <p className="text-gray-700 text-base">
-            This will be your unique id, don&apos;t lose it:
+            Your unique id. Save it, or find it by uploading your file again.
           </p>
           <div className="mt-5">
             <div className="rounded-md bg-gray-50 px-6 py-5 sm:flex sm:items-center sm:justify-between">

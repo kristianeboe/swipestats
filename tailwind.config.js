@@ -1,12 +1,17 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
-const colors = require('tailwindcss/colors');
 
 module.exports = {
   content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        rose: colors.rose,
+        // rose 500 #f43f5e
+        // rose 600 #e11d48
+        // ss #fe3c72
+        rose: {
+          500: '#fe3c72'
+        },
+      
       },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],

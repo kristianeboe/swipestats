@@ -80,8 +80,6 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
       splitbeeToken: SPLITBEE_TOKEN,
     });
 
-    if (DEBUG) return;
-
     if (MIXPANEL_ID) {
       mixpanel.init(MIXPANEL_ID, { debug: DEBUG, api_host: 'https://api-eu.mixpanel.com' });
     }
@@ -117,10 +115,10 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
       gtag('config', GA4_ID, {
         send_page_view: sendPageView,
       });
-      if (sendPageView) {
-        log('track', 'page_view', window.location.pathname);
-        mixpanel.track('page_view');
-      }
+      // if (sendPageView) {
+      //   log('track', 'page_view', window.location.pathname);
+      //   mixpanel.track('page_view');
+      // }
     }
   }
 
@@ -129,23 +127,35 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     // GA set user_props
     if (profileId) {
       log('identify');
-      mixpanel.identify(profileId);
-      splitbee.user.set({
-        profileId,
-      });
+      if (MIXPANEL_ID) {
+        mixpanel.identify(profileId);
+      }
+      if (SPLITBEE_TOKEN) {
+        splitbee.user.set({
+          profileId,
+        });
+      }
     }
 
-    gtag('set', 'user_properties', {
-      user_id: profileId,
-    });
+    if (GA4_ID) {
+      gtag('set', 'user_properties', {
+        user_id: profileId,
+      });
+    }
   }
 
   function resetTracking() {
-    mixpanel.reset();
-    gtag('set', 'user_properties', {
-      user_id: '',
-    });
-    splitbee.reset();
+    if (MIXPANEL_ID) {
+      mixpanel.reset();
+    }
+    if (GA4_ID) {
+      gtag('set', 'user_properties', {
+        user_id: '',
+      });
+    }
+    if (SPLITBEE_TOKEN) {
+      splitbee.reset();
+    }
   }
 
   function pageview(path: string) {
@@ -198,10 +208,10 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     log('track %s %O', action, attrs);
     if (DEBUG) return;
     // mixpane
-    if (options.mixpanel) mixpanel.track(action, attrs);
-    if (options.ga4) ga4Event(action, attrs);
+    if (options.mixpanel && MIXPANEL_ID) mixpanel.track(action, attrs);
+    if (options.ga4 && GA4_ID) ga4Event(action, attrs);
 
-    if (options.splitbee && action !== 'page_view') {
+    if (options.splitbee && SPLITBEE_TOKEN && action !== 'page_view') {
       splitbee.track(action, attrs);
     }
   }

@@ -99,7 +99,7 @@ export function PressSection() {
             Looking to write your own take on the data? Send us a message
           </p>
         </div>
-        <div className="mt-12 max-w-7xl mx-auto grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:max-w-none">
+        <div className="mt-12 max-w-7xl mx-auto grid gap-5 md:grid-cols-2 lg:grid-cols-4 lg:max-w-none">
           {posts.map((post) => (
             <div key={post.title} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
               <div className="flex-shrink-0">
