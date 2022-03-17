@@ -28,10 +28,11 @@ export function Chart(props: {
     },
     plugins: {
       legend: {
+        display: false,
         position: 'top' as const,
       },
       title: {
-        display: true,
+        display: false,
         text: props.title,
       },
     },

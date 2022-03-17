@@ -312,7 +312,7 @@ export default function HomePage() {
                 <div className="mt-12 sm:max-w-lg sm:w-full sm:flex">
                   <Link href="/upload/tinder/" passHref={true}>
                     <a className="mt-4 sm:mt-0">
-                      <Button content="Upload" />
+                      <Button content="Get Insights" />
                     </a>
                   </Link>
 

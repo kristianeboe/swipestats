@@ -13,6 +13,8 @@ import { GetServerSideProps } from 'next';
 import toast from 'react-hot-toast';
 import { getAgeFromBirthdate, getLabelForTinderProfile } from '../../lib/utils';
 import Head from 'next/head';
+import Stats from '../../components/modules/insights/stats';
+import { AppLayout } from '../../components/layouts/AppLayout';
 const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
@@ -159,8 +161,11 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
 
   log('datasets %O', datasets);
 
+  const matchesAndOpens = datasets.slice(0, 2);
+  const messagesAndSwipes = datasets.slice(2);
+
   return (
-    <div className="max-w-7xl mx-auto">
+    <AppLayout>
       <Head>
         <title>Get insights about your dating data | Swipestats</title>
         <meta
@@ -257,11 +262,11 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
         <Alert category="danger" title="Erro" descriptionList={errors.map((e) => e.message)} />
       )}
       {profiles.length ? (
-        <div className="flex flex-wrap justify-around ">
-          {datasets.map((ds, i) => {
+        <div className="grid sm:grid-cols-2 gap-8">
+          {matchesAndOpens.map((ds, i) => {
             const chartTitle = usageChartKeys[i].split('_').join(' ');
             return (
-              <div className="w-full sm:max-w-lg h-96" key={i}>
+              <div className="w-full " key={i}>
                 <div className="bg-white overflow-hidden shadow sm:rounded-lg">
                   <div className="px-4 py-5 sm:p-6">
                     <Chart title={chartTitle} datasets={ds} />
@@ -272,6 +277,44 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
           })}
         </div>
       ) : null}
+      {profiles.length && <Stats profiles={profiles} />}
+      {profiles.length ? (
+        <div className="grid sm:grid-cols-2 gap-8">
+          {messagesAndSwipes.map((ds, i) => {
+            const chartTitle = usageChartKeys[i + 2].split('_').join(' ');
+            return (
+              <div className="w-full  h-auto" key={i}>
+                <div className="bg-white overflow-hidden shadow sm:rounded-lg">
+                  <CardHead title={chartTitle} />
+                  <div className="px-4 py-5 sm:p-6">
+                    <Chart title={chartTitle} datasets={ds} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+    </AppLayout>
+  );
+}
+
+function CardHead(props: { title: string }) {
+  return (
+    <div className="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
+      <div className="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
+        <div className="ml-4 mt-2">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">{props.title}</h3>
+        </div>
+        {/* <div className="ml-4 mt-2 flex-shrink-0">
+          <button
+            type="button"
+            className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Create new job
+          </button>
+        </div> */}
+      </div>
     </div>
   );
 }
@@ -285,7 +328,7 @@ const notify = (m: string) => {
       } flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800`}
       role="alert"
     >
-      <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
+      <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-rose-500 bg-blue-100 rounded-lg dark:bg-rose-800 dark:text-rose-200">
         <svg
           className="w-5 h-5"
           fill="currentColor"
