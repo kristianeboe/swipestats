@@ -15,6 +15,8 @@ import { getAgeFromBirthdate, getLabelForTinderProfile } from '../../lib/utils';
 import Head from 'next/head';
 import Stats from '../../components/modules/insights/stats';
 import { AppLayout } from '../../components/layouts/AppLayout';
+import { useQuery } from 'react-query';
+import { fetchProfiles, getProfile } from '../../lib/api';
 const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
@@ -99,24 +101,48 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
   const router = useRouter();
 
   const [profiles, setProfiles] = useState<TinderProfilePrisma[]>([]);
+  const [me, ...others] = profiles;
+
+  async function compareWithUser(id: string) {
+    if (!profiles.some((p) => p.tinderId === id)) {
+      const newProfile = await fetchProfiles([id]).catch((e) => {
+        setErrors([e]);
+        notify('Fetch failed for ' + id);
+      });
+      if (newProfile) {
+        notify('Fetched profile for ' + getLabelForTinderProfile(newProfile));
+        setProfiles([...profiles, newProfile]);
+      }
+    }
+  }
+
   const [errors, setErrors] = useState<any[]>([]);
 
   useEffect(() => {
+    async function initialProfiles(id: string) {
+      const p1 = await fetchProfiles([id]);
+      notify('Fetched profile for ' + getLabelForTinderProfile(p1));
+      const p2 = await fetchProfiles([
+        'f82796aafac3d4dcf7bb21fafca151a3739f188b6970946654e09da11f659115',
+      ]);
+      notify('Fetched profile for ' + getLabelForTinderProfile(p2));
+      const p3 = await fetchProfiles([
+        '3f4b3a376a55ccbf7b57de1c1e19891ef36bd7ccdf370037e339d251ba5c85e9',
+      ]);
+      notify('Fetched profile for ' + getLabelForTinderProfile(p3));
+
+      if (p1) {
+        // setProfiles([tp]);
+        setProfiles([p1, p2, p3]);
+      } else {
+        notify('No profile found');
+      }
+    }
     if (queryProfileId) {
-      ky.get('/api/profiles?tinderId=' + queryProfileId)
-        .json<TinderProfilePrisma>()
-        .then((tp) => {
-          if (tp) {
-            setProfiles([tp]);
-            notify('Fetched profile for ' + getLabelForTinderProfile(tp));
-          } else {
-            notify('No profile found');
-          }
-        })
-        .catch((e) => {
-          setErrors([e]);
-          notify('Fetch failed');
-        });
+      initialProfiles(queryProfileId).catch((e) => {
+        setErrors([e]);
+        notify('Fetch failed');
+      });
     }
   }, [queryProfileId]);
 
@@ -165,7 +191,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
   const messagesAndSwipes = datasets.slice(2);
 
   return (
-    <AppLayout>
+    <AppLayout profile={me}>
       <Head>
         <title>Get insights about your dating data | Swipestats</title>
         <meta
@@ -182,7 +208,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
         />
         <meta property="og:image" content="/ss2.png" />
       </Head>
-      <div className="pt-24 container mx-auto">
+      <div className="pt-24 pb-12 container mx-auto">
         <h1 className="text-center text-6xl font-black">Insights</h1>
         <div className="md:flex md:items-center m-6">
           <div className="md:w-1/3 pt-2">
@@ -209,21 +235,29 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
             </button>
           </div>
         </div>
+        <div className="block text-gray-500 text-center  mb-1 mt-2 md:mb-0">
+          or a specific Demographic
+        </div>
         {/* <Alert v-if="alert.display" :heading="alert.heading" :body="alert.info" /> */}
-        {false && (
+        {true && (
           <div className="md:flex md:items-center mx-6 justify-center">
-            <label
-              className="block text-gray-500  md:text-right mb-1 mt-2 md:mb-0"
-              htmlFor="inline-full-name"
-            >
-              or a specific Demographic
-            </label>
-
             <button
               className="mt-2 shadow bg-rose-500 hover:bg-red-300 focus:shadow-outline focus:outline-none text-white  py-2 px-4 rounded md:ml-4"
               type="button"
+              onClick={() =>
+                compareWithUser('96d5e7ba8f42af5f40b1ea25a3deafc035ebd5350521b925a5e6478e2aebfee5')
+              }
             >
               Creator
+            </button>
+            <button
+              className="mt-2 shadow bg-rose-500 hover:bg-red-300 focus:shadow-outline focus:outline-none text-white  py-2 px-4 rounded md:ml-4"
+              type="button"
+              onClick={() =>
+                compareWithUser('3f4b3a376a55ccbf7b57de1c1e19891ef36bd7ccdf370037e339d251ba5c85e9')
+              }
+            >
+              Deepa
             </button>
             <button
               className="mt-2 shadow bg-rose-500 hover:bg-red-300 focus:shadow-outline focus:outline-none text-white  py-2 px-4 rounded md:ml-4"

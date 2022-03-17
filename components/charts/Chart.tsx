@@ -28,7 +28,7 @@ export function Chart(props: {
     },
     plugins: {
       legend: {
-        display: false,
+        display: true,
         position: 'top' as const,
       },
       title: {

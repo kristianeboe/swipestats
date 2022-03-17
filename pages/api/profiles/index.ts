@@ -23,9 +23,19 @@ export type TinderProfilePrisma = Prisma.TinderProfileGetPayload<{
 
 async function handler(req: NextApiRequest, res: NextApiResponse<TinderProfilePrisma>) {
   log(req.method || '');
-  const gaClientId = req.headers['X-GA-CLIENT-ID'] as string;
-  log(gaClientId || '');
+  // const gaClientId = req.headers['X-GA-CLIENT-ID'] as string;
+  // log(gaClientId || '');
   const tinderId = req.body.tinderId ?? req.query.tinderId;
+
+  // const queryIds = req.body.ids ?? (req.query.ids as string).split(',');
+  // const profiles = await prisma.tinderProfile.findMany({
+  //   where: {
+  //     tinderId: {
+  //       in: queryIds,
+  //     },
+  //   },
+  // });
+
   const existingTinderProfile = await prisma.tinderProfile.findUnique({
     where: {
       tinderId: tinderId,

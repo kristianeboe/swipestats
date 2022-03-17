@@ -6,13 +6,27 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { PlusSmIcon } from '@heroicons/react/solid';
 import { classNames } from '../../lib/utils';
 import { Footer } from '../tw/Footer';
+import { TinderProfile } from '@prisma/client';
+import Link from 'next/link';
 
-export function NavBar() {
+export function AppLayout(props: any) {
+  return (
+    <>
+      <NavBar />
+      <div className="max-w-7xl mx-auto pb-24 min-h-screen">{props.children}</div>
+      <Footer />
+    </>
+  );
+}
+
+export function NavBar(props: { profile?: TinderProfile }) {
+  const loggedIn = !!props.profile;
+
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
         <>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
             <div className="flex justify-between h-16">
               <div className="flex">
                 <div className="-ml-2 mr-2 flex items-center md:hidden">
@@ -26,18 +40,20 @@ export function NavBar() {
                     )}
                   </Disclosure.Button>
                 </div>
-                <div className="flex-shrink-0 flex items-center">
-                  <img
-                    className="block lg:hidden h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                    alt="Workflow"
-                  />
-                  <img
-                    className="hidden lg:block h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
-                    alt="Workflow"
-                  />
-                </div>
+                <Link href={'/?from=insights'} passHref>
+                  <a className="flex-shrink-0 flex items-center">
+                    <img
+                      className="block lg:hidden h-8 w-auto"
+                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                      alt="Workflow"
+                    />
+                    <img
+                      className="hidden lg:block h-8 w-auto"
+                      src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
+                      alt="Workflow"
+                    />
+                  </a>
+                </Link>
                 <div className="hidden md:ml-6 md:flex md:space-x-8">
                   {/* Current: "border-rose-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                   <a
@@ -86,69 +102,76 @@ export function NavBar() {
                   </button> */}
 
                   {/* Profile dropdown */}
-                  <Menu as="div" className="ml-3 relative">
-                    <div>
-                      <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
-                        <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                          alt=""
-                        />
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              Your Profile
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              Settings
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              Sign out
-                            </a>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                  {loggedIn && (
+                    <Menu as="div" className="ml-3 relative">
+                      <div>
+                        <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+                          <span className="sr-only">Open user menu</span>
+
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src={
+                              props.profile?.gender === 'M'
+                                ? '/images/svgs/undraw_male_avatar.svg' //  require('/assets/imgs/undraw_male_avatar.svg') //  '/assets/imgs/undraw_male_avatar.svg'
+                                : '/images/svgs/undraw_female_avatar.svg' // require('/assets/imgs/undraw_female_avatar.svg') // '/assets/imgs/undraw_female_avatar.svg' //  'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80'
+                            }
+                            alt=""
+                          />
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Your Profile
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Settings
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Sign out
+                              </a>
+                            )}
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  )}
                 </div>
               </div>
             </div>
@@ -235,15 +258,5 @@ export function NavBar() {
         </>
       )}
     </Disclosure>
-  );
-}
-
-export function AppLayout(props: any) {
-  return (
-    <>
-      <NavBar />
-      <div className="max-w-7xl mx-auto pb-24">{props.children}</div>
-      <Footer />
-    </>
   );
 }

@@ -1,4 +1,5 @@
 import 'tailwindcss/tailwind.css';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import '../styles/globals.css';
 import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import { TrackingProvider } from '../components/providers/TrackingProvider';
@@ -6,23 +7,27 @@ import React, { useEffect } from 'react';
 import debug, { logger } from '../lib/debug';
 import { ApiProvider } from '../components/providers/ApiProvider';
 import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 const log = logger(debug('app'));
+// const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  useEffect(() => {
-    // log('booting %s', 'Swipestats');
-    setTimeout(() => {
-      // throw new Error('Bugsnag test');
-    }, 1000);
-  }, []);
+  // useEffect(() => {
+  //   // log('booting %s', 'Swipestats');
+  //   setTimeout(() => {
+  //     // throw new Error('Bugsnag test');
+  //   }, 1000);
+  // }, []);
 
   return (
+    // <QueryClientProvider client={queryClient}>
     <TrackingProvider>
       <ApiProvider>
         <Component {...pageProps} />
         <Toaster />
       </ApiProvider>
     </TrackingProvider>
+    // </QueryClientProvider>
   );
 }
 
