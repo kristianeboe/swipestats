@@ -25,6 +25,7 @@ import DataRequestSupport from '../components/tw/DataRequestSupport';
 import { Button } from '../components/tw/Button';
 import { useLocalStorage } from '../lib/hooks/useStorage';
 import { PressSection } from '../components/tw/PressSection';
+import DataRequestCTA from '../components/tw/DataRequestCTA';
 
 const features = [
   { name: 'Parse the Tinder data file', icon: CloudUploadIcon },
@@ -521,6 +522,7 @@ export default function HomePage() {
 
         <EmailReminderSection />
         <PressSection />
+        <DataRequestCTA />
       </main>
 
       {/* Footer section */}

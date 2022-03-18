@@ -1,5 +1,5 @@
-// import * as debug from 'debug'
-const d = require('debug');
+import d from 'debug';
+// const d = require('debug');
 
 export default function debug(name: string) {
   return d('swipestats:client:' + name);
@@ -17,3 +17,10 @@ export const logger =
       debug(m, ...args);
     }
   };
+
+// export const l = (moduleName: string) => {
+//   return d('swipestats:client:' + moduleName);
+// };
+// (m: string, ...args: any[]) => debug(+m, ...args);
+
+export const logModule = (name: string) => d('swipestats:' + name + ':');
