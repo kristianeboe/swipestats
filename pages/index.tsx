@@ -28,11 +28,32 @@ import { PressSection } from '../components/tw/PressSection';
 import DataRequestCTA from '../components/tw/DataRequestCTA';
 
 const features = [
-  { name: 'Parse the Tinder data file', icon: CloudUploadIcon },
-  { name: 'Submit your anonymized data', icon: LockClosedIcon },
-  { name: 'Compare with others', icon: RefreshIcon },
-  { name: 'Open source code on Github', icon: ShieldCheckIcon },
-  { name: 'Live demo', icon: CogIcon },
+  {
+    name: 'Parse the Tinder data file',
+    icon: CloudUploadIcon,
+    description: 'Extract anonymous data from the data.json file you get from Tinder',
+  },
+  {
+    name: 'Submit your anonymized data',
+    icon: LockClosedIcon,
+    description: 'Upload the data and get additional insigths and metrics',
+  },
+  {
+    name: 'Compare with others',
+    icon: RefreshIcon,
+    description: 'Visualize your data against others, or against segments og gender and age',
+  },
+  {
+    name: 'Open source code on Github',
+    icon: ShieldCheckIcon,
+    description:
+      'This project is completely open source. Inspect the code yourself, and even contribute!',
+  },
+  {
+    name: 'Live demo',
+    icon: CogIcon,
+    description: 'Want to see the end result? Check out this live demo of a full profile',
+  },
   // { name: 'Database Backups', icon: ServerIcon },
 ];
 
@@ -436,8 +457,9 @@ export default function HomePage() {
                           {feature.name}
                         </h3>
                         <p className="mt-5 text-base text-gray-500">
-                          Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna
-                          sit morbi lobortis.
+                          {/* Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna
+                          sit morbi lobortis. */}
+                          {feature.description}
                         </p>
                       </div>
                     </div>
