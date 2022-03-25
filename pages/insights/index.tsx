@@ -16,7 +16,7 @@ import Head from 'next/head';
 import Stats from '../../components/modules/insights/stats';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { useQuery } from 'react-query';
-import { fetchProfiles, getProfile } from '../../lib/api';
+import { fetchProfiles } from '../../lib/api';
 const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
