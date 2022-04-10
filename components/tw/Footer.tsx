@@ -76,7 +76,7 @@ export function Footer() {
   return (
     <footer className=" bg-gray-900 ">
       <div className="mx-auto max-w-md py-12 px-4 overflow-hidden sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
-        <nav className="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
+        {/* <nav className="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
           {footerNavigation.main.map((item) => (
             <div key={item.name} className="px-5 py-2">
               <a href={item.href} className="text-base text-gray-400 hover:text-gray-300">
@@ -84,15 +84,21 @@ export function Footer() {
               </a>
             </div>
           ))}
-        </nav>
-        <div className="mt-8 flex justify-center space-x-6">
+        </nav> */}
+        {/* <div className="mt-8 flex justify-center space-x-6">
           {footerNavigation.social.map((item) => (
             <a key={item.name} href={item.href} className="text-gray-400 hover:text-gray-300">
               <span className="sr-only">{item.name}</span>
               <item.icon className="h-6 w-6" aria-hidden="true" />
             </a>
           ))}
-        </div>
+        </div> */}
+        <p className="mt-8 text-center text-base text-gray-400">
+          Made with 🔥 in Norway by{' '}
+          <a className="text-white hover:underline" href="https://www.instagram.com/kristianeboe/">
+            @kristianeboe
+          </a>
+        </p>
         <p className="mt-8 text-center text-base text-gray-400">
           &copy; 2021 Swipestats. All rights reserved.
         </p>

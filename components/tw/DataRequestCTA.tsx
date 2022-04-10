@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function DataRequestCTA() {
@@ -23,10 +24,11 @@ export default function DataRequestCTA() {
             </div>
           </div>
           <div className="-mt-6 aspect-w-5 aspect-h-3 md:aspect-w-2 md:aspect-h-1">
-            <img
+            <Image
               className="transform translate-x-6 translate-y-6 rounded-md object-cover object-left-top sm:translate-x-16 lg:translate-y-20"
-              src="https://tailwindui.com/img/component-images/full-width-with-sidebar.jpg"
-              alt="App screenshot"
+              src="/images/SwipestatsArticle.png"
+              alt="Swipestats medium article screenshot"
+              layout="fill"
             />
           </div>
         </div>
