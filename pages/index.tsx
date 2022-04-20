@@ -271,15 +271,17 @@ export default function HomePage() {
 
               <div className="mt-10">
                 <div className="group">
-                  <a href="/changelog" className="inline-flex space-x-4">
-                    <span className="rounded bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-500 tracking-wide uppercase">
-                      What&apos;s new
-                    </span>
-                    <span className="inline-flex group-hover:underline items-center text-sm font-medium text-rose-500 space-x-1">
-                      <span>Just shipped version 2.0.0</span>
-                      <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                  </a>
+                  <Link href="/changelog" passHref>
+                    <a className="inline-flex space-x-4">
+                      <span className="rounded bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-500 tracking-wide uppercase">
+                        What&apos;s new
+                      </span>
+                      <span className="inline-flex group-hover:underline items-center text-sm font-medium text-rose-500 space-x-1">
+                        <span>Just shipped version 2.0.0</span>
+                        <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                    </a>
+                  </Link>
                 </div>
                 <div className="mt-6 sm:max-w-xl">
                   <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">
