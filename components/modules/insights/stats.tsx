@@ -71,15 +71,15 @@ interface MessagesMeta {
 
 const metaNames = {
   nrOfConversations: '# of conversations',
-  longestConversation: '',
-  medianConversationLength: '',
-  averageConversationLength: '',
-  longestConversationInDays: '',
-  nrOfOneMessageConversations: '',
+  longestConversation: 'Longest conversation',
+  medianConversationLength: 'Median chat length',
+  averageConversationLength: 'Average chat length',
+  longestConversationInDays: 'Longest chat',
+  nrOfOneMessageConversations: '# of no reply chats',
+  percentOfOneMessageConversations: '% of no reply chats',
   //   medianConversationLengthInDays: '',
   //   'averageConversationLengthInDays': '' ,
-  nrOfGhostingsAfterInitialMessage: '',
-  percentOfOneMessageConversations: '',
+  nrOfGhostingsAfterInitialMessage: '# of times you ghosted',
 };
 
 export default function Stats(props: { profiles: TinderProfile[] }) {
@@ -105,7 +105,9 @@ export default function Stats(props: { profiles: TinderProfile[] }) {
               <div className="absolute bg-rose-500 rounded-md p-0 sm:p-3 hidden sm:block">
                 <item.icon className="h-6 w-6 text-white" aria-hidden="true" />
               </div>
-              <p className="ml-0 sm:ml-16 text-sm font-medium text-gray-500 truncate">{item.id}</p>
+              <p className="ml-0 sm:ml-16 text-sm font-medium text-gray-500 truncate">
+                {metaNames[item.id]}
+              </p>
             </dt>
             <dd className="ml-0 sm:ml-16 pb-6 flex items-baseline sm:pb-7">
               <p className="text-2xl font-semibold text-gray-900">

@@ -22,7 +22,7 @@ export default function Custom404() {
                   className="h-24 w-auto"
                   height={96}
                   width={96}
-                  src="/swipestatsLogo.svg"
+                  src="/swipestatsFireLogo.svg"
                   alt=""
                 />
                 {/* <img className="h-24 w-auto" src="/swipestatsLogo.svg" alt="" /> */}
@@ -41,9 +41,11 @@ export default function Custom404() {
                 Sorry, we couldn’t find the page you’re looking for.
               </p>
               <div className="mt-6">
-                <a href="#" className="text-base font-medium text-rose-600 hover:text-rose-500">
-                  Go back home<span aria-hidden="true"> &rarr;</span>
-                </a>
+                <Link href="/" passHref>
+                  <a className="text-base font-medium text-rose-600 hover:text-rose-500">
+                    Go back home<span aria-hidden="true"> &rarr;</span>
+                  </a>
+                </Link>
               </div>
             </div>
           </div>

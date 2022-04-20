@@ -9,14 +9,17 @@ module.exports = {
         // rose 600 #e11d48
         // ss #fe3c72
         rose: {
-          500: '#fe3c72'
+          500: '#fe3c72',
         },
-      
       },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'),  require('@tailwindcss/aspect-ratio'),],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/typography'),
+  ],
 };

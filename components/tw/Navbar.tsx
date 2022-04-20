@@ -18,8 +18,9 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { SearchIcon } from '@heroicons/react/solid';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
-import { SwipestatsLogo } from '../../pages';
+
 import Link from 'next/link';
+import { SwipestatsLogo } from '../svg/logos/swipestatsLogo';
 const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
@@ -57,7 +58,7 @@ export default function Navbar({ simple }: { simple: boolean }) {
                     src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
                     alt="Workflow"
                 /> */}
-                    <SwipestatsLogo extraClassNames="h-8" />
+                    <SwipestatsLogo className="h-8" />
                   </a>
                 </Link>
               </div>

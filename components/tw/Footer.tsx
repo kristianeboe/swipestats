@@ -1,11 +1,9 @@
 const footerNavigation = {
   main: [
-    { name: 'About', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Jobs', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Accessibility', href: '#' },
-    { name: 'Partners', href: '#' },
+    { name: 'Home', href: '/' },
+    { name: 'Press', href: '/#press' },
+    { name: 'Download dataset', href: '/research' },
+    { name: 'Contact', href: '/research?from=contact' },
   ],
   social: [
     {
@@ -76,15 +74,15 @@ export function Footer() {
   return (
     <footer className=" bg-gray-900 ">
       <div className="mx-auto max-w-md py-12 px-4 overflow-hidden sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
-        {/* <nav className="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
+        <nav className="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
           {footerNavigation.main.map((item) => (
-            <div key={item.name} className="px-5 py-2">
+            <div key={item.href} className="px-5 py-2">
               <a href={item.href} className="text-base text-gray-400 hover:text-gray-300">
                 {item.name}
               </a>
             </div>
           ))}
-        </nav> */}
+        </nav>
         {/* <div className="mt-8 flex justify-center space-x-6">
           {footerNavigation.social.map((item) => (
             <a key={item.name} href={item.href} className="text-gray-400 hover:text-gray-300">

@@ -1,64 +1,55 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Chartjs from 'chart.js/auto';
+import React from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  TimeScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 
-export function Chart(props: {
-  title: string;
-  datasets: {
-    key: string;
-    data: { x: string; y: number }[];
-    label: string;
-    borderColor: string;
-    backgroundColor: string;
-  }[];
-}) {
-  const chartContainer = useRef(null);
-  const [chartInstance, setChartInstance] = useState<any>(null);
+ChartJS.register(
+  TimeScale,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-  const options = {
-    // type: 'line' as 'line',
-    responsive: true,
-    scales: {
-      x: {
-        type: 'time' as const,
-        time: {
-          unit: 'month',
-        },
+const options = {
+  interaction: {
+    intersect: false,
+  },
+  radius: 1,
+  responsive: true,
+  scales: {
+    x: {
+      type: 'time' as const,
+      time: {
+        unit: 'month' as const,
+        //       //          tooltipFormat: 'EEE MMM d',
+        tooltipFormat: 'MMMM d (EEEE)',
       },
     },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top' as const,
-      },
-      title: {
-        display: false,
-        text: props.title,
-      },
-    },
-  };
+  },
+};
 
-  const chartConfig = {
-    type: 'line' as const,
-    data: {
-      datasets: props.datasets,
-    },
-    options,
-  };
-
-  console.log('chart', props.title, props);
-
-  useEffect(() => {
-    if (chartContainer && chartContainer.current) {
-      // @ts-ignore
-      const newChartInstance = new Chartjs(chartContainer.current, chartConfig);
-      setChartInstance(newChartInstance);
-    }
-  }, [chartContainer]);
-
+export function Chart(props: { datasetIdKey: string; datasets: any[] }) {
   return (
-    <div>
-      <canvas ref={chartContainer} />
-    </div>
+    <Line
+      datasetIdKey={props.datasetIdKey}
+      data={{
+        datasets: props.datasets,
+      }}
+      options={options}
+    />
   );
 }

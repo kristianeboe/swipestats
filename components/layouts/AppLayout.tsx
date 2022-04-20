@@ -12,7 +12,7 @@ import Link from 'next/link';
 export function AppLayout(props: any) {
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="max-w-7xl mx-auto pb-24 min-h-screen">{props.children}</div>
       <Footer />
     </>

@@ -1,4 +1,3 @@
-import { Chart } from '../../components/charts/Chart';
 // import KristianData from '../../fixtures/kristian-data.json';
 // import DeepaData from '../../fixtures/deepa-data.json';
 import { FullTinderDataJSON } from '../../interfaces/TinderDataJSON';
@@ -17,6 +16,8 @@ import Stats from '../../components/modules/insights/stats';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { useQuery } from 'react-query';
 import { fetchProfiles } from '../../lib/api';
+import { Line } from 'react-chartjs-2';
+import { Chart } from '../../components/charts/Chart';
 const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
@@ -78,6 +79,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
+const chartTitleMap = {
+  matches: 'Matches',
+  appOpens: 'App opens',
+  swipeLikes: 'Swipe likes',
+  swipePasses: 'Swipe passes',
+  messagesSent: 'Messages sent',
+  messagesReceived: 'Messages received',
+};
+
 export default function InsightsPage({ queryProfileId }: { queryProfileId?: string }) {
   // @ts-ignore
   // const testData: FullTinderDataJSON = KristianData;
@@ -113,6 +123,8 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
         notify('Fetched profile for ' + getLabelForTinderProfile(newProfile));
         setProfiles([...profiles, newProfile]);
       }
+    } else {
+      toast('Profile already imported');
     }
   }
 
@@ -122,18 +134,22 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
     async function initialProfiles(id: string) {
       const p1 = await fetchProfiles([id]);
       notify('Fetched profile for ' + getLabelForTinderProfile(p1));
-      const p2 = await fetchProfiles([
-        'f82796aafac3d4dcf7bb21fafca151a3739f188b6970946654e09da11f659115',
-      ]);
-      notify('Fetched profile for ' + getLabelForTinderProfile(p2));
-      const p3 = await fetchProfiles([
-        '3f4b3a376a55ccbf7b57de1c1e19891ef36bd7ccdf370037e339d251ba5c85e9',
-      ]);
-      notify('Fetched profile for ' + getLabelForTinderProfile(p3));
+      // const p2 = await fetchProfiles([
+      //   'f82796aafac3d4dcf7bb21fafca151a3739f188b6970946654e09da11f659115',
+      // ]);
+      // notify('Fetched profile for ' + getLabelForTinderProfile(p2));
+      // const p3 = await fetchProfiles([
+      //   '3f4b3a376a55ccbf7b57de1c1e19891ef36bd7ccdf370037e339d251ba5c85e9',
+      // ]);
+      // notify('Fetched profile for ' + getLabelForTinderProfile(p3));
 
       if (p1) {
         // setProfiles([tp]);
-        setProfiles([p1, p2, p3]);
+        setProfiles([
+          p1,
+          // p2,
+          //  p3
+        ]);
       } else {
         notify('No profile found');
       }
@@ -181,6 +197,8 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
         borderColor: index === 0 ? 'rgb(255, 99, 132)' : hashStringToColor(birthDate), //: randomRGB(), // 'rgb(255, 99, 132)',
         backgroundColor: index === 0 ? 'rgb(255, 99, 132, 0.5)' : hashStringToColor(birthDate, 0.5), // : randomRGB(0.5), ,
         data: aggregateDataForKey,
+        cubicInterpolationMode: 'monotone',
+        tension: 0.4,
       };
     })
   );
@@ -295,40 +313,41 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
       {errors.length > 0 && (
         <Alert category="danger" title="Erro" descriptionList={errors.map((e) => e.message)} />
       )}
-      {profiles.length ? (
-        <div className="grid sm:grid-cols-2 gap-8">
-          {matchesAndOpens.map((ds, i) => {
-            const chartTitle = usageChartKeys[i].split('_').join(' ');
-            return (
-              <div className="w-full " key={i}>
-                <div className="bg-white overflow-hidden shadow sm:rounded-lg">
-                  <div className="px-4 py-5 sm:p-6">
-                    <Chart title={chartTitle} datasets={ds} />
-                  </div>
+
+      <div className="grid sm:grid-cols-2 gap-8">
+        {matchesAndOpens.map((ds, i) => {
+          const chartTitle = chartTitleMap[usageChartKeys[i]]; // usageChartKeys[i].split('_').join(' ');
+          return (
+            <div className="w-full " key={i}>
+              <div className="bg-white overflow-hidden shadow sm:rounded-lg">
+                <div className="px-4 py-5 sm:p-6">
+                  <h2 className="leading-6  font-semibold tracking-wide ">{chartTitle}</h2>
+                  <Chart datasetIdKey="key" datasets={ds} />
                 </div>
               </div>
-            );
-          })}
-        </div>
-      ) : null}
-      {profiles.length && <Stats profiles={profiles} />}
-      {profiles.length ? (
-        <div className="grid sm:grid-cols-2 gap-8">
-          {messagesAndSwipes.map((ds, i) => {
-            const chartTitle = usageChartKeys[i + 2].split('_').join(' ');
-            return (
-              <div className="w-full  h-auto" key={i}>
-                <div className="bg-white overflow-hidden shadow sm:rounded-lg">
-                  <CardHead title={chartTitle} />
-                  <div className="px-4 py-5 sm:p-6">
-                    <Chart title={chartTitle} datasets={ds} />
-                  </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {profiles.length ? <Stats profiles={profiles} /> : null}
+
+      <div className="grid sm:grid-cols-2 gap-8">
+        {messagesAndSwipes.map((ds, i) => {
+          const chartTitle = chartTitleMap[usageChartKeys[i + 2]]; // usageChartKeys[i + 2].split('_').join(' ');
+          return (
+            <div className="w-full  h-auto" key={i}>
+              <div className="bg-white overflow-hidden shadow sm:rounded-lg">
+                {/* <CardHead title={chartTitle} /> */}
+                <div className="px-4 py-5 sm:p-6">
+                  <h2 className="leading-6  font-semibold tracking-wide ">{chartTitle}</h2>
+                  <Chart datasetIdKey="key" datasets={ds} />
                 </div>
               </div>
-            );
-          })}
-        </div>
-      ) : null}
+            </div>
+          );
+        })}
+      </div>
     </AppLayout>
   );
 }
