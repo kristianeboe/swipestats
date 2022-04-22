@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { FullTinderDataJSON } from '../interfaces/TinderDataJSON';
 import { getAgeFromBirthdate } from '../lib/utils';
@@ -28,15 +29,17 @@ export function UploadProfileCard({
         {/* <div className="w-full flex justify-center">
       <img className="w-48 p-4" :src="imgSrc" alt="Sunset in the mountains" />
     </div> */}
-        <div className="group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500 overflow-hidden">
-          <img
+        <div className="group flex justify-center rounded-lg bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 py-2 ">
+          <Image
             src={
               isMale
                 ? '/images/svgs/undraw_male_avatar.svg' //  require('/assets/imgs/undraw_male_avatar.svg') //  '/assets/imgs/undraw_male_avatar.svg'
                 : '/images/svgs/undraw_female_avatar.svg' // require('/assets/imgs/undraw_female_avatar.svg') // '/assets/imgs/undraw_female_avatar.svg' //  'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80'
             }
             alt=""
-            className="object-cover pointer-events-none  h-40 w-full px-40 "
+            className="object-cover pointer-events-none  px-40 "
+            height={160}
+            width={160}
           />
         </div>
         <div className="px-6 py-4">
@@ -49,8 +52,8 @@ export function UploadProfileCard({
           </div>
           {userData.city && (
             <p className="text-gray-700 text-base">
-              {userData.city.name}, {userData.city.region},{' '}
-              {travelLocationInfo[0].country.long_name}
+              {userData.city.name}, {userData.city.region}
+              {/* ,{' '}{travelLocationInfo[0].country.long_name} */}
             </p>
           )}
 
