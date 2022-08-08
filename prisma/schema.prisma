@@ -16,8 +16,9 @@ datasource db {
   // url                  = env("PLANETSCALE_URL_LOCAL")
   // shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
   // referentialIntegrity = "prisma"
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 
 }
 
@@ -76,15 +77,17 @@ model MessagesRaw {
 model CustomData {
   id String @id
 
-  phoneNumbersExchanged Int? @default(0)
-  dateArranged          Int? @default(0)
-  dateAttended          Int? @default(0)
-  dateCreepy            Int? @default(0)
-  dateNoSpark           Int? @default(0)
-  multipleDates         Int? @default(0)
-  sleptWithFirstDate    Int? @default(0)
-  sleptWithEventually   Int? @default(0)
-  relationshipsStarted  Int? @default(0)
+  phoneNumbersExchanged Int?
+  dateArranged          Int?
+  dateAttended          Int?
+  dateCreepy            Int?
+  dateNoSpark           Int?
+  multipleDates         Int?
+  sleptWithFirstDate    Int?
+  sleptWithEventually   Int?
+  relationshipsStarted  Int?
+  cohabitation          Int?
+  married               Int?
 
   premiumSubscriptionPeriods Json[]
 

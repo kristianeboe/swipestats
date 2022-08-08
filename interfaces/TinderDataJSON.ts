@@ -157,7 +157,7 @@ interface Title {
 }
 
 interface Job {
-  company: Company;
+  company?: Company;
   title: Title;
 }
 

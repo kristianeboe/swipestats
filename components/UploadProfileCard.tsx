@@ -112,7 +112,7 @@ export function UploadProfileCard({
                   )}
 
                   <div>
-                    {job.title.name} {job.company.displayed ? '@ ' + job.company.name : ''}{' '}
+                    {job.title.name} {job.company?.displayed ? '@ ' + job.company?.name : ''}{' '}
                   </div>
                 </div>
               ))}

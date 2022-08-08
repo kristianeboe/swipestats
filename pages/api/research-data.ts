@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Prisma } from '@prisma/client';
 import { logModule } from '../../lib/debug';
 import prisma from '../../lib/serverLib/prisma';
 import { getRandomSubarray } from '../../lib/utils';

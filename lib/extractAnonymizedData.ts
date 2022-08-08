@@ -27,6 +27,30 @@ async function createSwipestatsProfileId(birthDate: string, appProfileCreateDate
   return profileId;
 }
 
+function isValidTinderJson(tinderJson: FullTinderDataJSON) {
+  const errors: {
+    [key: string]: { message: string; [key: string]: any };
+  } = {};
+  if (!Object.values(tinderJson.Usage.app_opens).length) {
+    errors.app_opens = {
+      message: 'No app opens detected',
+      appOpens: tinderJson.Usage.app_opens,
+    };
+  }
+  if (!tinderJson.User.create_date) {
+    errors.user_create_date = {
+      message: 'No create_date detected',
+      user: tinderJson.User,
+    };
+  }
+
+  if (Object.keys(errors).length === 0) {
+    return [true, {}];
+  } else {
+    return [false, errors];
+  }
+}
+
 export async function createSwipestatsProfilePayloadFromJson(
   jsonString: string,
   provider: ProviderId
@@ -36,6 +60,17 @@ export async function createSwipestatsProfilePayloadFromJson(
       try {
         const tinderJson: FullTinderDataJSON = JSON.parse(jsonString);
         log('Tinder data parsed successfully');
+
+        const birthDate = tinderJson.User.birth_date;
+        const createDate = tinderJson.User.create_date;
+
+        const [jsonDataIsValid, invalidKeysAndValues] = isValidTinderJson(tinderJson);
+
+        if (!jsonDataIsValid) {
+          console.error('Tinder data is invalid', invalidKeysAndValues);
+          throw new Error('Tinder data json is invalid');
+        }
+
         const anonymizedTinderJson: AnonymizedTinderDataJSON = {
           // including messages
           ...tinderJson,
