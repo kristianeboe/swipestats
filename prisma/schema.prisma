@@ -66,7 +66,7 @@ model TinderProfile {
   customData    CustomData? @relation(fields: [custdomDataId], references: [id])
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @default(now()) @updatedAt
   Message   Message[]
 }
 
