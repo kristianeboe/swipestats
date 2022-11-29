@@ -19,7 +19,6 @@ datasource db {
   provider          = "postgresql"
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
-
 }
 
 model User {
@@ -48,7 +47,6 @@ model TinderProfile {
   user_interests      Json? // Should probably be enum
   sexual_orientations Json? // Should probably be enum
 
-
   // usage
   appOpens         Json
   matches          Json
@@ -66,12 +64,27 @@ model TinderProfile {
 
   custdomDataId String?     @unique // same as tinderId
   customData    CustomData? @relation(fields: [custdomDataId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Message   Message[]
 }
 
 model MessagesRaw {
   id            String          @id
   messages      Json
   TinderProfile TinderProfile[]
+}
+
+model Message {
+  id                    String        @id
+  matchId               String
+  to                    Int // a kind of match id
+  createdAt             DateTime      @default(now()) // sent at?
+  sentDate              DateTime
+  content               String
+  from                  TinderProfile @relation(fields: [tinderProfileTinderId], references: [tinderId])
+  tinderProfileTinderId String
 }
 
 model CustomData {

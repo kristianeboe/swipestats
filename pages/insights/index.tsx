@@ -1,7 +1,7 @@
 // import KristianData from '../../fixtures/kristian-data.json';
 // import DeepaData from '../../fixtures/deepa-data.json';
 import { FullTinderDataJSON } from '../../interfaces/TinderDataJSON';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { DateValueMap } from '../../interfaces/utilInterfaces';
 import { Alert } from '../../components/tw/Alert';
@@ -208,6 +208,36 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
   const matchesAndOpens = datasets.slice(0, 2);
   const messagesAndSwipes = datasets.slice(2);
 
+  const conversionRates = useMemo(
+    () =>
+      profiles.map((p, index) => {
+        try {
+          const matches = datasets[0][0];
+          const swipeLikes = datasets[2][0];
+
+          return {
+            key: 'conversionRate',
+            label: getLabelForTinderProfile(p),
+            borderColor: 'rgb(255, 99, 132)', //: randomRGB(), // 'rgb(255, 99, 132)',
+            backgroundColor: 'rgb(255, 99, 132, 0.5)', // : randomRGB(0.5), ,
+            data: matches.data.map((matchesPrMonth, i) => {
+              const swipesPrMonth = swipeLikes.data[i];
+
+              return {
+                x: matchesPrMonth.x,
+                y: swipesPrMonth.y ? matchesPrMonth.y / swipesPrMonth.y : 0,
+              };
+            }),
+            cubicInterpolationMode: 'monotone',
+            tension: 0.4,
+          };
+        } catch (error) {
+          return undefined;
+        }
+      }),
+    [profiles]
+  );
+
   return (
     <AppLayout profile={me}>
       <Head>
@@ -320,14 +350,30 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
         <Alert category="danger" title="Error" descriptionList={errors.map((e) => e.message)} />
       )}
 
+      {conversionRates.every(Boolean) && (
+        <div className="w-full  h-auto">
+          <div className="bg-white overflow-hidden shadow sm:rounded-lg">
+            {/* <CardHead title={chartTitle} /> */}
+            <div className="px-4 py-5 sm:p-6">
+              <h2 className="leading-6  font-semibold tracking-wide ">{'Conversion rate'}</h2>
+              <Chart datasetIdKey="key" datasets={conversionRates} />
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid sm:grid-cols-2 gap-8 pt-6">
         {matchesAndOpens.map((ds, i) => {
           const chartTitle = chartTitleMap[usageChartKeys[i]]; // usageChartKeys[i].split('_').join(' ');
+          const totalN = ds[0]?.data.reduce((acc, cur) => acc + cur.y, 0);
           return (
             <div className="w-full " key={i}>
               <div className="bg-white overflow-hidden shadow sm:rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
-                  <h2 className="leading-6  font-semibold tracking-wide ">{chartTitle}</h2>
+                  <div className="flex justify-between">
+                    <h2 className="leading-6  font-semibold tracking-wide ">{chartTitle}</h2>
+                  </div>
+                  <span className="text-sm">Total: {totalN}</span>
                   <Chart datasetIdKey="key" datasets={ds} />
                 </div>
               </div>
@@ -341,12 +387,17 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
       <div className="grid sm:grid-cols-2 gap-8">
         {messagesAndSwipes.map((ds, i) => {
           const chartTitle = chartTitleMap[usageChartKeys[i + 2]]; // usageChartKeys[i + 2].split('_').join(' ');
+          const totalN = ds[0]?.data.reduce((acc, cur) => acc + cur.y, 0);
+
           return (
             <div className="w-full  h-auto" key={i}>
               <div className="bg-white overflow-hidden shadow sm:rounded-lg">
                 {/* <CardHead title={chartTitle} /> */}
                 <div className="px-4 py-5 sm:p-6">
-                  <h2 className="leading-6  font-semibold tracking-wide ">{chartTitle}</h2>
+                  <div className="flex justify-between">
+                    <h2 className="leading-6  font-semibold tracking-wide ">{chartTitle}</h2>
+                  </div>
+                  <span className="text-sm">Total: {totalN}</span>
                   <Chart datasetIdKey="key" datasets={ds} />
                 </div>
               </div>
