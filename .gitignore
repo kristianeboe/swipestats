@@ -44,3 +44,7 @@ yarn-error.log*
 
 
 old_swipestats_profiles
+
+db_backups
+# Sentry
+.sentryclirc
