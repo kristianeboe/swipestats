@@ -99,8 +99,8 @@ export function UploadProfileCard({
           {userData.jobs?.length && (
             <section className="mt-4">
               <h2 className="font-bold">Jobs data</h2>
-              {userData.jobs.map((job) => (
-                <div key={job.title.name}>
+              {userData.jobs?.map((job) => (
+                <div key={job.title?.name}>
                   {false && (
                     <button
                       type="button"
@@ -112,7 +112,7 @@ export function UploadProfileCard({
                   )}
 
                   <div>
-                    {job.title.name} {job.company?.displayed ? '@ ' + job.company?.name : ''}{' '}
+                    {job.title?.name} {job.company?.displayed ? '@ ' + job.company?.name : ''}{' '}
                   </div>
                 </div>
               ))}
@@ -122,7 +122,7 @@ export function UploadProfileCard({
             <section className="mt-4">
               <h2 className="font-bold">School data</h2>
               {userData.schools.map((school) => (
-                <div key={school.name}>
+                <div key={school?.name}>
                   {false && (
                     <button
                       type="button"
@@ -133,7 +133,7 @@ export function UploadProfileCard({
                     </button>
                   )}
 
-                  <div>School: {school.name}</div>
+                  <div>School: {school?.name}</div>
                   {/* <div>Show school: { school.displayed }</div> */}
                 </div>
               ))}
