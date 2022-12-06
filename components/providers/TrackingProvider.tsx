@@ -4,6 +4,7 @@ import mixpanel, { track } from 'mixpanel-browser';
 import Bugsnag from '@bugsnag/js';
 import BugsnagPluginReact from '@bugsnag/plugin-react';
 import splitbee from '@splitbee/web';
+import { hotjar } from 'react-hotjar';
 
 import { useStorage, useLocalStorage } from '../../lib/hooks/useStorage';
 import { logger } from '../../lib/debug';
@@ -17,6 +18,7 @@ export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
 const MIXPANEL_ID = process.env.NEXT_PUBLIC_MIXPANEL_ID;
 const BUGSNAG_API_KEY = process.env.NEXT_PUBLIC_BUGSNAG_API_KEY;
 const SPLITBEE_TOKEN = process.env.NEXT_PUBLIC_SPLITBEE_TOKEN;
+const HOTJAR_ID = process.env.NEXT_PUBLIC_HOTJAR_ID;
 
 const DEBUG = false;
 
@@ -72,13 +74,15 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
       mixpanelId: MIXPANEL_ID,
       bugsnagApiKey: BUGSNAG_API_KEY,
       splitbeeToken: SPLITBEE_TOKEN,
+      hotjarId: HOTJAR_ID,
     });
-    console.log('initialize analytics', {
-      ga4Id: GA4_ID,
-      mixpanelId: MIXPANEL_ID,
-      bugsnagApiKey: BUGSNAG_API_KEY,
-      splitbeeToken: SPLITBEE_TOKEN,
-    });
+    // console.log('initialize analytics', {
+    //   ga4Id: GA4_ID,
+    //   mixpanelId: MIXPANEL_ID,
+    //   bugsnagApiKey: BUGSNAG_API_KEY,
+    //   splitbeeToken: SPLITBEE_TOKEN,
+    //   hotjar: HOTJAR_ID
+    // });
 
     if (MIXPANEL_ID) {
       mixpanel.init(MIXPANEL_ID, { debug: DEBUG, api_host: 'https://api-eu.mixpanel.com' });
@@ -110,6 +114,10 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
         },
       });
     }
+    if (HOTJAR_ID) {
+      hotjar.initialize(parseInt(HOTJAR_ID), 6);
+    }
+
     if (GA4_ID) {
       const sendPageView = true;
       gtag('config', GA4_ID, {
@@ -134,6 +142,9 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
         splitbee.user.set({
           profileId,
         });
+      }
+      if (hotjar.initialized()) {
+        hotjar.identify(profileId, {});
       }
     }
 
@@ -211,8 +222,13 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     if (options.mixpanel && MIXPANEL_ID) mixpanel.track(action, attrs);
     if (options.ga4 && GA4_ID) ga4Event(action, attrs);
 
-    if (options.splitbee && SPLITBEE_TOKEN && action !== 'page_view') {
-      splitbee.track(action, attrs);
+    if (action !== 'page_view') {
+      if (options.splitbee && SPLITBEE_TOKEN) {
+        splitbee.track(action, attrs);
+      }
+      if (HOTJAR_ID) {
+        hotjar.event(action);
+      }
     }
   }
 

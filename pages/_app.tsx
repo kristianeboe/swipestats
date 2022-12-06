@@ -8,6 +8,8 @@ import debug, { logger } from '../lib/debug';
 import { ApiProvider } from '../components/providers/ApiProvider';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { Analytics } from '@vercel/analytics/react';
+
 const log = logger(debug('app'));
 // const queryClient = new QueryClient();
 
@@ -25,6 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ApiProvider>
         <Component {...pageProps} />
         <Toaster />
+        <Analytics />
       </ApiProvider>
     </TrackingProvider>
     // </QueryClientProvider>
