@@ -18,7 +18,7 @@ export default function DataRequestCTA() {
                 Get your own dataset with a Swipestats Data Request and receive access to 1000
                 anonymized profiles
               </p>
-              <Link href="/research?from=cta" passHref>
+              <Link href="/research" passHref>
                 <a
                   onClick={() => track('Get Dataset CTA', {})}
                   className="mt-8 bg-white border border-transparent rounded-md shadow px-5 py-3 inline-flex items-center text-base font-medium text-rose-600 hover:bg-rose-50"

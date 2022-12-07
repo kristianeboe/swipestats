@@ -1,5 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { CheckIcon } from '@heroicons/react/outline';
+import { useTracking } from '../components/providers/TrackingProvider';
 import { Footer } from '../components/tw/Footer';
 
 const hobbyFeatures = [
@@ -22,6 +23,7 @@ const growthFeatures = [
 ];
 
 export default function ResearchPage() {
+  const { track } = useTracking();
   return (
     <div>
       <div className="bg-gray-900">
@@ -83,6 +85,7 @@ export default function ResearchPage() {
                           <div className="rounded-lg shadow-md">
                             <a
                               href="mailto:kristian.e.boe@gmail.com?subject=Swipestats%20Data%20Request%3A%20Sample&body=This%20tier%20is%20currently%20free%2C%20just%20write%20me%20what%20you%20are%20intending%20to%20use%20the%20data%20for%20and%20I'll%20reach%20out%20with%20the%20dataset."
+                              onClick={() => track('Research select Small Sample')}
                               target="_blank"
                               className="block w-full text-center rounded-lg border border-transparent bg-white px-6 py-3 text-base font-medium text-rose-600 hover:bg-gray-50"
                               aria-describedby="tier-sample"
@@ -143,10 +146,12 @@ export default function ResearchPage() {
                       <div className="mt-10">
                         <div className="rounded-lg shadow-md">
                           <a
-                            href="mailto:kristian.e.boe@gmail.com?subject=Swipestats%20Data%20Request%3A%20Scale&body=This%20tier%20is%20currently%20free%2C%20just%20write%20me%20what%20you%20are%20intending%20to%20use%20the%20data%20for%20and%20I'll%20reach%20out%20with%20the%20dataset."
+                            // href="mailto:kristian.e.boe@gmail.com?subject=Swipestats%20Data%20Request%3A%20Scale&body=This%20tier%20is%20currently%20free%2C%20just%20write%20me%20what%20you%20are%20intending%20to%20use%20the%20data%20for%20and%20I'll%20reach%20out%20with%20the%20dataset."
+                            href="https://buy.stripe.com/7sI6pK3TEd6haRy5kk"
                             className="block w-full text-center rounded-lg border border-transparent bg-rose-600 px-6 py-4 text-xl leading-6 font-medium text-white hover:bg-rose-700"
                             aria-describedby="tier-scale"
                             target="_blank"
+                            onClick={() => track('Research select Full package', {})}
                             rel="noreferrer"
                           >
                             Start analyzing
@@ -197,6 +202,7 @@ export default function ResearchPage() {
                               target="_blank"
                               className="block w-full text-center rounded-lg border border-transparent bg-white px-6 py-3 text-base font-medium text-rose-600 hover:bg-gray-50"
                               aria-describedby="tier-custom"
+                              onClick={() => track('Research select Reach out', {})}
                               rel="noreferrer"
                             >
                               Reach out

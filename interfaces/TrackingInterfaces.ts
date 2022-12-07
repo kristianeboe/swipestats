@@ -26,6 +26,11 @@ type OtherAction = 'Provider waitlist Signed up';
 
 type CTA_ACTION = 'Get Dataset CTA' | 'Try Roast CTA';
 
+type ResearchActions =
+  | 'Research select Small Sample'
+  | 'Research select Full package'
+  | 'Research select Reach out';
+
 export type AnalyticsAction =
   | MarketingAction
   | FileAction
@@ -33,4 +38,5 @@ export type AnalyticsAction =
   | InsightsAction
   | OtherAction
   | CTA_ACTION
+  | ResearchActions
   | 'page_view';
