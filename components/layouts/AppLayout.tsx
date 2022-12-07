@@ -13,7 +13,7 @@ export function AppLayout(props: any) {
   return (
     <>
       {/* <NavBar /> */}
-      <div className="max-w-7xl mx-auto pb-24 min-h-screen">{props.children}</div>
+      <div className="max-w-7xl px-4 mx-auto pb-24 min-h-screen">{props.children}</div>
       <Footer />
     </>
   );

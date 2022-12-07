@@ -18,6 +18,8 @@ import { useQuery } from 'react-query';
 import { fetchProfiles } from '../../lib/api';
 import { Line } from 'react-chartjs-2';
 import { Chart } from '../../components/charts/Chart';
+import RoastBanner from '../../components/RoastBanner';
+import DataRequestCTA from '../../components/tw/DataRequestCTA';
 const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
@@ -258,7 +260,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
       </Head>
       <div className="pt-24 pb-6 container mx-auto">
         <h1 className="text-center text-6xl font-black">Insights</h1>
-        <div className="md:flex md:items-center m-6">
+        <div className="md:flex md:items-center my-6">
           <div className="md:w-1/3 pt-2">
             <label
               className="block text-gray-500 md:text-right mb-1 md:mb-0 mr-4"
@@ -383,7 +385,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
       </div>
 
       {profiles.length ? <Stats profiles={profiles} /> : null}
-
+      <RoastBanner />
       <div className="grid sm:grid-cols-2 gap-8">
         {messagesAndSwipes.map((ds, i) => {
           const chartTitle = chartTitleMap[usageChartKeys[i + 2]]; // usageChartKeys[i + 2].split('_').join(' ');
@@ -405,6 +407,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
           );
         })}
       </div>
+      <DataRequestCTA />
     </AppLayout>
   );
 }

@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTracking } from '../providers/TrackingProvider';
 
 export default function DataRequestCTA() {
+  const { track } = useTracking();
   return (
     <div className="bg-white">
       <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
@@ -17,7 +19,10 @@ export default function DataRequestCTA() {
                 anonymized profiles
               </p>
               <Link href="/research?from=cta" passHref>
-                <a className="mt-8 bg-white border border-transparent rounded-md shadow px-5 py-3 inline-flex items-center text-base font-medium text-rose-600 hover:bg-rose-50">
+                <a
+                  onClick={() => track('Get Dataset CTA', {})}
+                  className="mt-8 bg-white border border-transparent rounded-md shadow px-5 py-3 inline-flex items-center text-base font-medium text-rose-600 hover:bg-rose-50"
+                >
                   Get your dataset today
                 </a>
               </Link>

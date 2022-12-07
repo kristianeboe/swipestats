@@ -24,10 +24,13 @@ type InsightsAction = 'Compared with an id' | 'Compared with a segment' | 'Chang
 
 type OtherAction = 'Provider waitlist Signed up';
 
+type CTA_ACTION = 'Get Dataset CTA' | 'Try Roast CTA';
+
 export type AnalyticsAction =
   | MarketingAction
   | FileAction
   | ProfileAction
   | InsightsAction
   | OtherAction
+  | CTA_ACTION
   | 'page_view';
