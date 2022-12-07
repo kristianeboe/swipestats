@@ -85,7 +85,7 @@ export default function ResearchPage() {
                           <div className="rounded-lg shadow-md">
                             <a
                               href="mailto:kristian.e.boe@gmail.com?subject=Swipestats%20Data%20Request%3A%20Sample&body=This%20tier%20is%20currently%20free%2C%20just%20write%20me%20what%20you%20are%20intending%20to%20use%20the%20data%20for%20and%20I'll%20reach%20out%20with%20the%20dataset."
-                              onClick={() => track('Research select Small Sample')}
+                              onClick={() => track('Research select Small Sample', {})}
                               target="_blank"
                               className="block w-full text-center rounded-lg border border-transparent bg-white px-6 py-3 text-base font-medium text-rose-600 hover:bg-gray-50"
                               aria-describedby="tier-sample"
