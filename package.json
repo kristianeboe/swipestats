@@ -2,7 +2,7 @@
   "name": "swipestats",
   "private": true,
   "scripts": {
-    "dev": "DEBUG=swipestats:* next dev",
+    "dev": "DEBUG=swipestats: next dev",
     "dev-local": "docker-compose up -d && next dev",
     "db:local": "docker-compose up",
     "build": "next build",
@@ -44,7 +44,8 @@
     "react-hot-toast": "^2.2.0",
     "react-hotjar": "^5.3.0",
     "react-intersection-observer": "^8.33.1",
-    "react-query": "^3.34.16"
+    "react-query": "^3.34.16",
+    "recharts": "^2.2.0"
   },
   "devDependencies": {
     "@headlessui/react": "^1.4.2",

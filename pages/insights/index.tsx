@@ -16,10 +16,11 @@ import Stats from '../../components/modules/insights/stats';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { useQuery } from 'react-query';
 import { fetchProfiles } from '../../lib/api';
-import { Line } from 'react-chartjs-2';
+
 import { Chart } from '../../components/charts/Chart';
 import RoastBanner from '../../components/RoastBanner';
 import DataRequestCTA from '../../components/tw/DataRequestCTA';
+import { LineChart, XAxis, YAxis, Line, ResponsiveContainer } from 'recharts';
 const log = logger(debug('insights'));
 
 function aggregateDataPrMonthForChart(dataObject: DateValueMap) {
@@ -352,12 +353,37 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
         <Alert category="danger" title="Error" descriptionList={errors.map((e) => e.message)} />
       )}
 
+      {/* {conversionRates.every(Boolean) && (
+        <div className="w-full  h-auto">
+          <div className="bg-white overflow-hidden shadow sm:rounded-lg">
+            <div className="px-4 py-5 sm:p-6 w-full h-96">
+              <h2 className="leading-6  font-semibold tracking-wide ">{'Match rate'}</h2>
+
+              <ResponsiveContainer>
+                <LineChart
+                  data={
+                    conversionRates[0].data
+                    // .map((cr) => cr?.data)
+                  }
+                >
+                  <XAxis dataKey="x" />
+                  <YAxis />
+                  {conversionRates.map((cr, i) => (
+                    <Line key={i} type="monotone" dataKey="y" stroke="#8884d8" />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      )} */}
+
       {conversionRates.every(Boolean) && (
         <div className="w-full  h-auto">
           <div className="bg-white overflow-hidden shadow sm:rounded-lg">
             {/* <CardHead title={chartTitle} /> */}
             <div className="px-4 py-5 sm:p-6">
-              <h2 className="leading-6  font-semibold tracking-wide ">{'Conversion rate'}</h2>
+              <h2 className="leading-6  font-semibold tracking-wide ">{'Match rate'}</h2>
               <Chart datasetIdKey="key" datasets={conversionRates} />
             </div>
           </div>

@@ -22,6 +22,7 @@ const moduleExports = {
   },
   // Optional build-time configuration options
   sentry: {
+    hideSourceMaps: false,
     // See the sections below for information on the following options:
     //   'Configure Source Maps':
     //     - disableServerWebpackPlugin
