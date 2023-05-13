@@ -43,8 +43,8 @@ export default function DataRequestSupport() {
             How to request your data
           </h1>
           <p className="mt-6 max-w-3xl text-xl text-gray-300">
-            Varius facilisi mauris sed sit. Non sed et duis dui leo, vulputate id malesuada non.
-            Cras aliquet purus dui laoreet diam sed lacus, fames. Dui, amet, nec sit pulvinar.
+            Requesting your data is easy, but it is not automatic. You usually need to log into your
+            providers account, fill out a form and wait up to 24 hours. Instructions below:
           </p>
         </div>
       </div>
@@ -70,7 +70,9 @@ export default function DataRequestSupport() {
               <div className="p-6 bg-gray-50 rounded-bl-2xl rounded-br-2xl md:px-8">
                 <a
                   href={link.href}
+                  target="_blank"
                   className="text-base font-medium text-rose-700 hover:text-rose-600"
+                  rel="noreferrer"
                 >
                   Start here<span aria-hidden="true"> &rarr;</span>
                 </a>
