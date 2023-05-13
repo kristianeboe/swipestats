@@ -7,7 +7,7 @@ export default function RoastBanner() {
 
   return (
     <div className="relative sm:py-16 overflow-hidden">
-      <div className="mx-auto max-w-md px-4 overflow-hidden sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto  overflow-hidden  lg:max-w-7xl ">
         <div className="relative overflow-hidden rounded-2xl bg-rose-600 px-6 py-10 shadow-xl sm:px-12 sm:py-20">
           <div aria-hidden="true" className="absolute inset-0 -mt-72 sm:-mt-32 md:mt-0 flex">
             <svg

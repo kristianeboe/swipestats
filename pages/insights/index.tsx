@@ -267,7 +267,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
               className="block text-gray-500 md:text-right mb-1 md:mb-0 mr-4"
               htmlFor="inline-full-name"
             >
-              Compare yourself with another Id
+              Compare yourself with another Swipestats Id
             </label>
           </div>
           <div className="md:w-1/3 pt-2">
@@ -390,7 +390,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
         </div>
       )}
 
-      <div className="grid sm:grid-cols-2 gap-8 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-6">
         {matchesAndOpens.map((ds, i) => {
           const chartTitle = chartTitleMap[usageChartKeys[i]]; // usageChartKeys[i].split('_').join(' ');
           const totalN = ds[0]?.data.reduce((acc, cur) => acc + cur.y, 0);
@@ -412,7 +412,7 @@ export default function InsightsPage({ queryProfileId }: { queryProfileId?: stri
 
       {profiles.length ? <Stats profiles={profiles} /> : null}
       <RoastBanner />
-      <div className="grid sm:grid-cols-2 gap-8">
+      <div className="grid sm:grid-cols-2 gap-8 my-8">
         {messagesAndSwipes.map((ds, i) => {
           const chartTitle = chartTitleMap[usageChartKeys[i + 2]]; // usageChartKeys[i + 2].split('_').join(' ');
           const totalN = ds[0]?.data.reduce((acc, cur) => acc + cur.y, 0);
