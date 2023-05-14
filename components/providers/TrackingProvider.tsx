@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import mixpanel, { track } from 'mixpanel-browser';
+import mixpanel from 'mixpanel-browser';
 import Bugsnag from '@bugsnag/js';
 import BugsnagPluginReact from '@bugsnag/plugin-react';
 import splitbee from '@splitbee/web';
 import { hotjar } from 'react-hotjar';
+import { Analytics, AnalyticsBrowser } from '@june-so/analytics-next';
 
 import { useStorage, useLocalStorage } from '../../lib/hooks/useStorage';
 import { logger } from '../../lib/debug';
@@ -19,6 +20,7 @@ const MIXPANEL_ID = process.env.NEXT_PUBLIC_MIXPANEL_ID;
 const BUGSNAG_API_KEY = process.env.NEXT_PUBLIC_BUGSNAG_API_KEY;
 const SPLITBEE_TOKEN = process.env.NEXT_PUBLIC_SPLITBEE_TOKEN;
 const HOTJAR_ID = process.env.NEXT_PUBLIC_HOTJAR_ID;
+const JUNE_ID = process.env.NEXT_PUBLIC_JUNE_ID;
 
 const DEBUG = false;
 
@@ -68,7 +70,18 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     true
   );
 
+  const [juneAnalytics, setJuneAnalytics] = useState<Analytics | undefined>(undefined);
+
   function initializeTracking() {
+    // On component mount, create an AnalyticsBrowser instance.
+    if (JUNE_ID) {
+      AnalyticsBrowser.load({
+        writeKey: JUNE_ID,
+      }).then(([response]) => {
+        setJuneAnalytics(response);
+      });
+    }
+
     log('initialize tracking %O', {
       ga4Id: GA4_ID,
       mixpanelId: MIXPANEL_ID,
@@ -146,6 +159,11 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
       if (hotjar.initialized()) {
         hotjar.identify(profileId, {});
       }
+      if (juneAnalytics) {
+        juneAnalytics.identify(profileId, {
+          // email: 'test@example.com'
+        });
+      }
     }
 
     if (GA4_ID) {
@@ -175,10 +193,17 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
     track('page_view', {
       page_path: path,
     });
+
     // ga4Event('page_view', {
     //   page_path: path,
     // });
   }
+
+  // separate pageview for june
+  useEffect(() => {
+    // Send a pageview event once Analytics is ready.
+    if (juneAnalytics) juneAnalytics.page();
+  }, [juneAnalytics]);
 
   // initialize (goes first no matter what)
   useEffect(() => {
@@ -228,6 +253,18 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
       }
       if (HOTJAR_ID) {
         hotjar.event(action);
+      }
+
+      if (juneAnalytics) {
+        juneAnalytics.track(
+          action,
+          attrs
+          //   {
+          //   context: {
+          //     groupId
+          //   }
+          // }
+        );
       }
     }
   }
