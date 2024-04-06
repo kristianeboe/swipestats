@@ -1,9 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
+
 import { Footer } from '../../components/tw/Footer';
-import Navbar from '../../components/tw/Navbar';
+
 import { UploadArea } from '../../components/UploadArea';
-import { UploadProfileCard } from '../../components/UploadProfileCard';
 import { FullTinderDataJSON } from '../../interfaces/TinderDataJSON';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/solid';
@@ -21,9 +20,9 @@ import { useTracking } from '../../components/providers/TrackingProvider';
 import { createSwipestatsProfilePayloadFromJson } from '../../lib/extractAnonymizedData';
 import { SwipestatsProfile } from '../../interfaces/SwipestatsProfile';
 import { SwipestatsProfilePayload } from '../api/profiles';
+import { ProviderId } from '../../interfaces/utilInterfaces';
 // import testData from '../../fixtures/kristian-data.json';
 
-export type ProviderId = 'tinder' | 'hinge' | 'bumble';
 interface DataProvider {
   id: ProviderId;
   title: 'Tinder' | 'Hinge' | 'Bumble';

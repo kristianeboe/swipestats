@@ -88,6 +88,7 @@ export function TrackingProvider(props: { children: React.ReactNode }) {
       bugsnagApiKey: BUGSNAG_API_KEY,
       splitbeeToken: SPLITBEE_TOKEN,
       hotjarId: HOTJAR_ID,
+      june: JUNE_ID,
     });
     // console.log('initialize analytics', {
     //   ga4Id: GA4_ID,

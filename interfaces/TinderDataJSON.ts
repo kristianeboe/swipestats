@@ -10,6 +10,9 @@ interface TinderDataJSONBase {
   Messages: Messages[];
   RoomsAndInteractions: RoomsAndInteractions;
   SwipeNotes: any[];
+  SwipeParty?: {
+    assignments: any[];
+  };
   StudentVerifications?: StudentVerifications;
 }
 
@@ -30,10 +33,10 @@ export interface Usage {
   messages_sent: DateValueMap;
   messages_received: DateValueMap;
   advertising_id: {
-    [date: string]: string; // empty string
+    [date: string]: string; // uuid or empty string
   };
   idfa: {
-    [date: string]: string; // empty string
+    [date: string]: string; // empty string // or 0000000000-000000-00000-00000-0000000000 // note: not exact number of 0s
   };
 }
 
@@ -46,8 +49,8 @@ interface TinderUserBase {
   create_date: IsoDate;
 
   gender: string;
-  gender_filter: string;
-  interested_in: string;
+  gender_filter: string; // "M" | "M and F"
+  interested_in: string; // "M" | "M and F"
   bio?: string;
   city?: City;
   connection_count?: number;
@@ -63,12 +66,21 @@ interface TinderUserBase {
   travel_location_info: TravelLocationInfo[];
   client_registration_info?: {
     platform: 'ios' | 'android' | string;
+    app_version: number;
   };
   travel_pos: TravelPos;
 
   college: any[];
   user_interests?: string[]; //  "Fashion","Grab a drink","Cooking","Brunch","Wine"
   sexual_orientations?: string[]; // ['str']
+
+  descriptors: Descriptor[];
+}
+
+interface Descriptor {
+  name: string; // "Smoking", "Pets" "Zodiac"
+  choices: string[]; // ["Non-smoker"] // ["Pet-free"] // ["Virgo"]
+  visibility: string; // "public" // ?
 }
 
 interface AnonymizedTinderUser extends TinderUserBase {
@@ -88,6 +100,15 @@ interface FullTinderUser extends TinderUserBase {
 
 export interface Experiences {
   [key: string]: any;
+  // "Series Name": "Swipe Night",
+  // "Episode 1 Ending": "PHOBE"
+  // "EPISODE 1 Decisions": [
+  // "LIED TO TEX ABOUT BENJY"
+  // "LET BENJY JUMP ALONE"
+  // ]
+  // "Personalized Videos": [
+  // "Swipe Night: KILLER WEEKENS EPISODE 2"
+  // ]
 }
 
 export interface RoomsAndInteractions {
@@ -110,6 +131,7 @@ interface StudentVerifications {
 interface Campaigns {
   current_campaigns: any[];
   expired_campaigns: any[];
+  // [{"event_name": "Free Tonight?", "campaign_name": "Free Tonight?"}, {"event_name": "Looking for love.", "campaign_name": "Looking for love."}]
 }
 
 interface Coords {
@@ -232,10 +254,10 @@ interface Pos2 {
 interface Subscription {
   status: string;
   terms: number;
-  product_type: string;
+  product_type: string; // "plus"
   create_date: Date;
   expire_date: Date;
-  platform: string;
+  platform: string; // "apple_store"
   pos: Pos2;
 }
 
@@ -247,14 +269,53 @@ export interface Purchases {
 }
 
 export interface Spotify {
-  spotify_connected: boolean;
+  spotify_connected: false;
+}
+
+export interface SpotifyConnected {
+  spotify_connected: true;
+  spotify_username: string;
+  spotify_user_type: 'premium' | 'free';
+  spotify_theme_track: SpotifyTrack;
+  spotify_top_artists: {
+    id: string;
+    name: string;
+    top_track: SpotifyTrack;
+    popularity: number;
+  }[];
+  spotify_last_updated_at: string; // date
+}
+
+interface SpotifyTrack {
+  id: string;
+  uri: string;
+  name: string;
+  album: {
+    id: string;
+    name: string;
+    images: {
+      url: string;
+      width: number;
+      height: number;
+    }[];
+  };
+  artists: {
+    id: string;
+    name: string;
+  }[];
+  preview_url: string;
+  spotify_top_artists: {
+    id: string;
+    name: string;
+    selected: boolean;
+  }[];
 }
 
 export interface Message {
   to: number; // match id - 1
   from: string; // "You"
-  message: string; // should maybe clean this from HTML to string. Lot's of "don&rsquo;t" // new Date() actually works well to parse it
-  sent_date: string; // not iso string, but close "Tue, 30 Nov 2021 05:08:21 GMT"
+  message: string; // should maybe clean this from HTML to string. Lot's of "don&rsquo;t"
+  sent_date: string; // not iso string, but close "Tue, 30 Nov 2021 05:08:21 GMT" // new Date() actually works well to parse it
   type?: string; // "gif"
   fixed_height?: string; // url (to gif)
 }
